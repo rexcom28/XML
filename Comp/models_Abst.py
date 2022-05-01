@@ -8,11 +8,11 @@ from CatSat.models import c_FormaPago, c_TipoRelacion, c_UsoCFDI, c_RegimenFisca
 
 class Comprobante(models.Model):
     def c_Uso():
-        return [(Uso.Uso, f'{Uso.Uso}-{Uso.Descripcion}') for Uso in c_UsoCFDI.objects.all()]
+        pass #return [(Uso.Uso, f'{Uso.Uso}-{Uso.Descripcion}') for Uso in c_UsoCFDI.objects.all()]
     def c_Regimen():
-        return [(Reg.Regimen,f'{Reg.Regimen}-{Reg.Descripcion}') for Reg in c_RegimenFiscal.objects.all()]
+        pass #return [(Reg.Regimen,f'{Reg.Regimen}-{Reg.Descripcion}') for Reg in c_RegimenFiscal.objects.all()]
     def c_Pais():
-        return [(Pa.Pais,f'{Pa.Pais}-{Pa.Descripcion}') for Pa in c_Pais.objects.all()]
+        pass #return [(Pa.Pais,f'{Pa.Pais}-{Pa.Descripcion}') for Pa in c_Pais.objects.all()]
 
     NAP = '01'
     DEF = '02'
@@ -134,7 +134,7 @@ class Concepto(ConceptoBase):
 
 class CFDI_Relacionados_Base(models.Model):
     def c_Relacion():
-        return [(rel.Relacion,rel.Relacion+'-'+rel.Descripcion) for rel in c_TipoRelacion.objects.all()]    
+        pass #return [(rel.Relacion,rel.Relacion+'-'+rel.Descripcion) for rel in c_TipoRelacion.objects.all()]    
     TipoRelacion    = models.CharField(max_length=2, choices=c_Relacion())
     UUID            = models.CharField(max_length=36, unique=True)
     class Meta:
