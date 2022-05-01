@@ -26,7 +26,7 @@ class ComprobantePagos(Comprobante,Emisor,Receptor):
         return f'Pago: {self.Folio}'
 class Pagos(models.Model):
     def c_FormaPagoF():
-        pass #return [(FP.FormaPago, FP.FormaPago+'-'+FP.Descripcion) for FP in c_FormaPago.objects.all()]
+        return [(FP.FormaPago, FP.FormaPago+'-'+FP.Descripcion) for FP in c_FormaPago.objects.all()]
     CompPago        = models.ForeignKey(ComprobantePagos, on_delete=models.CASCADE, blank=True, null=True)
 
     FechaPago       = models.DateTimeField(blank=False)
