@@ -147,8 +147,7 @@ class Parte(ConceptoBase):
     InfoAduanera    = models.ManyToManyField(InformacionAduanera, related_name='Parte_InfoAduana', blank=True)
     def __str__(self):
         return str(self.Descripcion)
-    def get_absolute_url(self): 
-        return reverse('index')
+    
 
 class ACuentaTerceros_Ingreso(ACuentaTerceros_Base):
     Ingreso_Concepto         = models.ForeignKey(Ingreso_Conceptos, related_name='Ingreso_Concepto_ACT', on_delete=models.CASCADE)

@@ -1,6 +1,6 @@
 
 from django.db import models
-from CatSat.models import c_FormaPago
+#from CatSat.models import c_FormaPago
 from Comp.models_Abst import Impuesto,Comprobante,Emisor, Receptor
 
 from django.core.validators import MinLengthValidator
@@ -26,7 +26,7 @@ class ComprobantePagos(Comprobante,Emisor,Receptor):
         return f'Pago: {self.Folio}'
 class Pagos(models.Model):
     def c_FormaPagoF():
-        return [(FP.FormaPago, FP.FormaPago+'-'+FP.Descripcion) for FP in c_FormaPago.objects.all()]
+        pass #return [(FP.FormaPago, FP.FormaPago+'-'+FP.Descripcion) for FP in c_FormaPago.objects.all()]
     CompPago        = models.ForeignKey(ComprobantePagos, on_delete=models.CASCADE, blank=True, null=True)
 
     FechaPago       = models.DateTimeField(blank=False)
