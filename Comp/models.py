@@ -5,7 +5,19 @@ from multiprocessing.sharedctypes import Value
 
 from django.forms import ValidationError
 
-from . models_Abst import *
+from . models_Abst import (
+
+    Comprobante,
+    Emisor,
+    Receptor,
+    ConceptoBase,
+    Concepto,
+    CFDI_Relacionados_Base,
+    ACuentaTerceros_Base,
+    InformacionGlobal_Base,
+    Impuesto,
+    
+)
 from Clientes.models import Configuracion
 
 from django.db import models

@@ -83,9 +83,6 @@ class Comprobante(models.Model):
 
     class Meta:
         abstract  = True
-        
-
- 
 
 class Emisor(models.Model):
     Rfc_Emi     = models.CharField( blank=False, max_length=15)
@@ -143,8 +140,6 @@ class CFDI_Relacionados_Base(models.Model):
     class Meta:
         abstract =True
 
-
-
 class ACuentaTerceros_Base(models.Model):    
     RfcACuentaTerceros      = models.CharField(blank=False, max_length=15)
     NombreACuentaTerceros   = models.CharField(blank=False, max_length=254)
@@ -156,8 +151,6 @@ class InformacionGlobal_Base(models.Model):
     Periodicidad    = models.CharField(blank=False, max_length=4)
     Meses           = models.CharField(blank=False, max_length=2)
     Año             = models.CharField(blank=False, max_length=4)
-
-
 class Impuesto(models.Model):
     ISR = '001'
     IVA = '002'
