@@ -17,7 +17,6 @@ DEBUG = False
 
 ALLOWED_HOSTS = ['readerxml.herokuapp.com', 'localhost']
 
-
 # Application definition
 
 INSTALLED_APPS = [
