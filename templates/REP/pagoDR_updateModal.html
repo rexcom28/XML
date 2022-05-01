@@ -1,0 +1,80 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+{% if formDR %}
+<div class="modal fade bd-example-modal-lg" id="drUpdateModal{{dr.id}}" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel{{dr.id}}" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel{{dr.id}}">Documentos Relacionados</h5>
+                <button  type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            
+            <div class="modal-body">
+
+                <form method="post" id="form{{dr.id}}" action="{% url 'PagoDR_update' dr.id %}">                    
+                    {% csrf_token %}
+                    <div class="row p-3">
+                        <div class="col-12">
+                            <label for="{{formDR.IdDocumento.id_for_label }}"><strong>UUID:</strong></label>
+                            {% render_field formDR.IdDocumento placeholder=formDR.IdDocumento.label class+="form-control"  type="text" %}
+                        </div>
+                        <div class="col">
+                            <label for="{{formDR.Serie.id_for_label }}"><strong>Serie:</strong></label>
+                            {% render_field formDR.Serie placeholder=formDR.Serie.label class+="form-control"  type="text" %}
+                        </div>
+                        <div class="col">
+                            <label for="{{formDR.Folio.id_for_label }}"><strong>Folio:</strong></label>
+                            {% render_field formDR.Folio placeholder=formDR.Folio.label class+="form-control"  type="text" %}
+                        </div>
+                        <div class="col">
+                            <label for="{{formDR.MonedaDR.id_for_label }}"><strong>Moneda:</strong></label>
+                            {% render_field formDR.MonedaDR placeholder=formDR.MonedaDR.label class+="form-control"  type="text" %}
+                        </div>
+                        <div class="">                            
+                            {% render_field formDR.Pago_rel|append_attr:"hidden:hidden" placeholder=form.Pago_rel.label class+="form-select"  type="select" %}
+                        </div>
+                    </div>    
+
+                    <div class="row p-3">
+                        <div class="col">
+                            <label for="{{formDR.EquivalenciaDR.id_for_label }}"><strong>Equivalencia:</strong></label>
+                            {% render_field formDR.EquivalenciaDR placeholder=formDR.EquivalenciaDR.label class+="form-control"  type="number" %}
+                        </div>
+                        <div class="col">
+                            <label for="{{formDR.NumParcialidad.id_for_label }}"><strong>Parcialidad:</strong></label>
+                            {% render_field formDR.NumParcialidad placeholder=formDR.NumParcialidad.label class+="form-control"  type="number" %}
+                        </div>
+                        <div class="col">
+                            <label for="{{formDR.ObjetoImp.id_for_label }}"><strong>Objecto Impuesto:</strong></label>                            
+                            {% render_field formDR.ObjetoImp placeholder=form.ObjetoImp.label class+="form-select"  type="select" %}
+                        </div>
+                    </div>                        
+                        
+                    <div class="row p-3">
+                        <div class="col">
+                            <label for="{{formDR.ImpPagado.id_for_label }}"><strong>Importe Pagado:</strong></label>
+                            {% render_field formDR.ImpPagado placeholder=formDR.ImpPagado.label class+="form-control"  type="number" %}
+                        </div>
+                        <div class="col">
+                            <label for="{{formDR.ImpSaldoAnt.id_for_label }}"><strong>Saldo Anterior:</strong></label>
+                            {% render_field formDR.ImpSaldoAnt|append_attr:"readonly:readonly" placeholder=formDR.ImpSaldoAnt.label class+="form-control"  type="number" %}
+                        </div>
+                        
+                        <div class="col">
+                            <label for="{{formDR.ImpSaldoInsoluto.id_for_label }}"><strong>Saldo Insoluto:</strong></label>
+                            {% render_field formDR.ImpSaldoInsoluto|append_attr:"readonly:readonly" placeholder=formDR.ImpSaldoInsoluto.label class+="form-control"  type="number" %}
+                        </div>
+                    </div>
+                        
+                    <div class="modal-footer">           
+                        <button  id="closeListForm" type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" name="submit" class="btn btn-primary btn btn-primary" >Actualizar</button>
+                    </div>
+                </form>
+
+            </div>
+            
+        </div>
+    </div>
+</div>
+{% endif %}

@@ -1,0 +1,54 @@
+
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+<table class="table">
+    <thead class="thead-dark">        
+        <tr>
+            <th scope="col">Clave Producto/Servicio</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Clave Unidad</th>
+            <th scope="col">Unidad</th>
+            <th scope="col">Impuestos</th>
+            <th scope="col">actions</th>
+
+        </tr>
+    </thead>
+    <tbody>        
+        {% for ingreso in object_list %}
+            <tr>  
+                <th scope="row">{{ingreso.ClaveProdServ}}</th>               
+                <td>{{ingreso.Cantidad}}</td>
+                <td>{{ingreso.ClaveUnidad}}</td>
+                <td>{{ingreso.Unidad}}</td>
+                <td>
+                    {% for p in Impuestos %}
+                        {% if p.Imp_Partida.id == ingreso.id %}
+                            <div class=" border-top border-bottom">
+                                
+                                {% if p.Impuesto == '002' and p.Tipo_T_R == 'TRASLADO' %}
+                                    <strong>IVA: $</strong>
+                                {% elif p.Impuesto == '002' and p.Tipo_T_R == 'RETENCION' %}
+                                    <strong>IVA Ret.: $</strong>
+                                {% else %}
+                                    <strong>ISR: $</strong>
+                                {% endif %}
+                                    {{p.Importe}}
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </td>
+                <td ><a href="{% url 'ingreso-concepto-update-view' ingreso.id %}"><button class="btn btn-outline-primary">Update</button></a></td>
+                
+            </tr>            
+        {% endfor %}        
+    </tbody>
+</table>
+
+<a class="btn btn-outline-primary" href="{% url 'ingreso_concepto-create-view' id  %}">Crear Partida</a>
+<a class="btn btn-outline-success" href="{% url 'ingreso-update-view' id  %}">Encabezado</a>
+{% endblock content %}
+
+

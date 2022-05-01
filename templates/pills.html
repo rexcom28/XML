@@ -1,0 +1,542 @@
+{% extends 'base.html' %}
+
+{% block title %}Ingreso con Partidas Create{% endblock title %}
+
+{% block content %}
+
+
+<div id="app" v-cloak>
+    
+    <br>
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="columns">
+            <div class="column is-8">
+                <ul class="nav nav-pills -mb-3" id="pills-tab" role="tablist">
+                    <!--GENERALES-->
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">                    
+                            {% block tab1 %}{% endblock tab1 %}
+                        </button>                            
+                    </li>
+                    <!--END GENERAL-->
+
+                    <!--TOTALES-->
+                    <li class="nav-item" role="presentation">                
+                        <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                            {% block tab2 %}{% endblock tab2 %}
+                        </button>
+                    </li>
+                    <!--END TOTALES-->
+
+                    <!--CFDI-->
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
+                            {% block tab3 %}{% endblock tab3 %}
+                        </button>
+                    </li>
+                    <!--END CFDI-->
+
+                    <!--Receptor/Emisor-->
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-receptor-tab" data-bs-toggle="pill" data-bs-target="#pills-receptor" type="button" role="tab" aria-controls="pills-receptor" aria-selected="false">
+                            {% block tab4 %}{% endblock tab4 %}
+                        </button>
+                    </li>
+                    <!--END Receptor/Emisor-->
+
+                    <!--Dcto Relacionados-->
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="pills-rela-tab" data-bs-toggle="pill" data-bs-target="#pills-rela" type="button" role="tab" aria-controls="pills-rela" aria-selected="false">
+                            {% block tab5 %}{% endblock tab5 %}
+                        </button>
+                    </li>
+                    <!--END Dcto Relacionados-->
+                </ul>
+                <div class="tab-content" id="pills-tabContent">
+                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                        {% block block_tab1 %}{% endblock block_tab1 %}
+                    </div>
+                    <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                        {% block block_tab2 %}{% endblock block_tab2 %}
+                    </div>
+                    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                        {% block block_tab3 %}{% endblock block_tab3 %}
+                    </div>
+                    <div class="tab-pane fade" id="pills-receptor" role="tabpanel" aria-labelledby="pills-receptor-tab">
+                        {% block block_tab4 %}{% endblock block_tab4 %}
+                    </div>
+
+                    <div class="tab-pane fade" id="pills-rela" role="tabpanel" aria-labelledby="pills-rela-tab">
+                        {% block block_tab5 %}{% endblock block_tab5 %}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br>
+        
+        {% if form.errors %}
+
+            {% for field in form %}
+                
+                {% for error in field.errors %} 
+                {{field.name}}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+        <hr>
+        
+        {% block Inline_formM %}
+        {% endblock Inline_formM %}    
+        <div class="mt-3 mb-5">
+            <button type="submit" class="px-5 btn btn-success">Guardar Comprobante</button>
+        </div>
+        {{ form.non_form_errors }}
+        
+        
+        
+            
+    </form>
+</div>
+
+{% endblock content %}
+{% block scripts %}
+<script>
+    
+    const app = Vue.createApp({
+        el:'#app',
+        delimiters:['[[',']]'],
+        data(){
+            return{
+                ch_edo: false,
+                ch_1:false,
+                ch_0:false,
+
+
+                c_CodigoPostalS:[],
+                c_CodigoPostal:{},
+
+                c_FormaPagoS:[],
+                c_FormaPago:{},
+
+                c_ClienteS:[],
+                c_Cliente:{},
+
+                c_ProdServS :[],
+                c_ProdServ :{},
+                c_ProductoS:[],
+                c_Producto:{},
+                
+
+                
+                Nombre_Rec:'',
+                RegimenFiscal_Rec:'',
+                DomicilioFiscal_Rec:'',
+                ResidenciaFiscal_Rec:'',
+                NumRegIdTrib_Rec:'',
+                UsoCFDI_Rec:'',
+
+                UUID: '',
+                TipoRel : '',
+                ID:'',
+                CFDI_Rel_id:'',
+                aTipoRelacionS:[],
+                aTipoRelacion:{},
+                numDR:0,
+                ADD:'',
+
+                
+                c_TipoRelS:[],
+                c_TipoRel:{},
+
+
+                
+            }            
+        },
+        mounted() {  
+            this.CFDI_Rel_id='{{ form.Ingreso.value }}'
+            console.log('ssssssssssssssss',this.CFDI_Rel_id)
+            this.created() 
+                   
+        },
+        
+        methods: {
+            created(){
+                
+                this.listaUUIDS(this.CFDI_Rel_id)
+                this.ADD= document.getElementById('addDR')
+                this.ADD.removeAttribute('data-bs-toggle')
+                this.ADD.removeAttribute('data-bs-target')
+                
+                this.get_c_FormaPagoS()  
+                this.get_c_TipoRelacion()
+
+                this.Nombre_Rec             = '{% if form.Nombre_Rec.value|length > 0  %}{{form.Nombre_Rec.value}}{% endif %}'
+                this.RegimenFiscal_Rec      = '{% if form.RegimenFiscal_Rec.value|length > 0 %}{{form.RegimenFiscal_Rec.value}}{% endif %}'
+                this.DomicilioFiscal_Rec    = '{% if form.DomicilioFiscal_Rec.value|length > 0 %}{{form.DomicilioFiscal_Rec.value}}{% endif %}'
+                this.ResidenciaFiscal_Rec   = '{% if form.ResidenciaFiscal_Rec.value|length > 0 %}{{form.ResidenciaFiscal_Rec.value}}{% endif %}'
+                this.NumRegIdTrib_Rec       = '{% if form.NumRegIdTrib_Rec.value|length > 0 %}{{form.NumRegIdTrib_Rec.value}}{% endif %}'
+                this.UsoCFDI_Rec            = '{% if form.UsoCFDI_Rec.value|length > 0 %}{{form.UsoCFDI_Rec.value}}{% endif %}'
+            },
+            checkDR(id, e){
+
+                console.log('{{form.Estado_CFDI.value}}')
+                if(id==='None'){
+                    
+                    return alert('Hay que guardar el comprobante antes de agregar Documentos Relacionados')
+                }
+                if (this.aTipoRelacionS.length > 0 ){
+                    return alert('El comprobante ya tiene un documento relacionado, editelo o eliminelo antes de agregar uno Nuevo')
+                }
+                e.target.setAttribute('data-bs-toggle', 'modal')
+                e.target.setAttribute('data-bs-target',"#addDRModal")
+                e.target.click()
+            },
+            async addDR(id, e){    
+                if(this.UUID.length != 36){
+                    return alert('la longitud no es de 36  caracteres')
+                }
+                if (this.TipoRel.length !=2){
+                    return alert('La longitud del tipo relacion no es de 2')
+                }
+                let response
+                let data ={
+                    'id':id,
+                    'UUID': this.UUID,
+                    'TR': this.TipoRel
+                }
+                console.log('ANTES DATA',data)
+                
+                response = await sendRequest('/doctoRelacion_add/', 'post', data)
+                let resolve = Promise.resolve(response)
+                resolve.then((res) =>{
+                    return res.json()
+                })
+                .then((data)=>{
+                    if(data["res"]===true){
+                        
+                        this.listaUUIDS(this.CFDI_Rel_id)
+                        this.UUID=""
+                        this.TipoRel=""
+                        this.ADD.removeAttribute('data-bs-toggle')
+                        this.ADD.removeAttribute('data-bs-target')
+
+                    }
+                })
+            },
+            async LoadUUID(ID, UUID, TR){
+                console.log(ID, UUID, TR)
+                
+                this.ID=ID
+                this.UUID = UUID
+                this.TipoRel= TR
+                
+            },
+            async EditDR(id, tr, uuid){
+                let data ={'id':id,'tr':tr, 'uuid':uuid}
+                let response = await sendRequest('/doctoRelacion_edit/', 'post', data)
+                let resolve = Promise.resolve(response)
+                resolve.then((res)=>{
+                    return res.json()
+                })
+                .then((data)=>{
+                    if(data["res"]===true){
+                        this.listaUUIDS(this.CFDI_Rel_id)
+                        alert('Documento Relacionado Actualizado!!')
+                    }
+                })
+            },
+            async BorraDR(id){
+                if(confirm('seguro desea borrar el Documento relacionado? ')){
+                    let response 
+                    let data = {
+                        'id':id
+                    }                
+                    
+                    response = await sendRequest('/doctoRelacion_delete/', 'post', data)
+                    let resolve = Promise.resolve(response)
+                    resolve.then((res)=>{
+                        return res.json()
+                    })
+                    .then((data)=>{
+                        if (data["res"] === true){
+                            this.listaUUIDS(this.CFDI_Rel_id)
+                            this.UUID=''
+                            this.TipoRel=''
+                            this.ADD.removeAttribute('data-bs-toggle')
+                            this.ADD.removeAttribute('data-bs-target')
+                        }
+                        
+                    })
+                }
+            },
+            async listaUUIDS(id){
+                let response 
+                
+                response = await sendRequest(`/doctoRelacion/?id=${id}`, 'get')
+                let resolve = Promise.resolve(response)
+                resolve.then((res)=>{
+                    return res.json()
+                })
+                .then((data)=>{
+                    //console.log('data["res"]', data["res"])
+                    this.aTipoRelacionS = data["res"]
+                    this.numDR = this.aTipoRelacionS.length
+                    return true
+                })
+                .catch((error)=>{
+                    this.numDR = this.aTipoRelacionS.length
+                    return false
+                })
+                
+            },
+            async sendRequest(url, method, data){
+                var myHeaders = new Headers({
+                  'Content-Type': 'application/json',
+                  'X-Requested-With':'XMLHttpRequest'
+                });
+                
+                if(method!= 'get'){                
+                                             
+                    myheaders.set('X-CSRFToken', this.csrf )                  
+                };
+                
+                var response = await fetch(url,{
+                    method: method,
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'X-Requested-With':'XMLHttpRequest'
+                    },
+                    body: data
+                });
+                
+                return response
+              },
+            async get_c_TipoRelacion(){
+                let response = await this.sendRequest('/cats/c_TipoRelacionView/', 'get')
+                let resolve = Promise.resolve(response)
+                resolve.then((res)=>{
+                    return res.json()
+                })
+                .then((data)=>{
+                    return this.c_TipoRelS = data["TipoRel"]
+                })
+                
+
+            },
+            async get_c_CodigoPostal(event, bool){
+
+                //agregar control y pasar param para descripcion(estado)
+                let response
+                console.log('event11',event.target.value, 'bool',bool)
+                if(bool){
+                    response = await this.sendRequest(`/cats/c_CodigoPostalView/?CoP=${event}&Desc_CP=${this.ch_edo}`, 'get')
+                }else{
+                    response = await this.sendRequest(`/cats/c_CodigoPostalView/?CoP=${event.target.value}&Desc_cp=${this.ch_edo}`, 'get')
+                }
+                let resolve = Promise.resolve(response)
+                resolve.then((res) => {
+                    return res.json()
+                })
+                .then((data)=>{
+                    return this.c_CodigoPostalS = data["CodigoPostal"]
+                })
+            },
+            async get_c_FormaPagoS(){
+                let response
+                response = await this.sendRequest(`/cats/c_FormaPagoView/`, 'get')
+                let resolve = Promise.resolve(response)
+                resolve.then((res)=>{
+                    return res.json()
+                })
+                .then((data)=>{
+                    return this.c_FormaPagoS = data["FormaPago"]
+                })
+            },
+            async get_c_Clientes(event, bool){
+                let response
+                //console.log('event.target',event.target.value)                
+                response = await this.sendRequest(`http://127.0.0.1:8000/Clientes/c_ClientesView/?RFC=${event.target.value}`,'get')
+                let resolve = Promise.resolve(response)
+                resolve.then((res)=>{
+                    return res.json()
+                })
+                .then((data)=>{
+                    
+                    return this.c_ClienteS = data["Clientes"]
+                })
+
+            },
+            async get_c_Producto(event, bool){
+                let response
+                response = await sendRequest(`/Clientes/c_ProductosView/?clvaI=${event.target.value}`,'get')
+                let resolve = Promise.resolve(response)
+                resolve.then(res=>{
+                    return res.json()
+                })
+                .then((data)=>{
+                    //console.log(data["Productos"])
+                    return this.c_ProductoS = data["Productos"]
+                })
+            },
+            async fillProd(event){
+                const Prod = this.c_ProductoS.filter((e)=>{
+                    return e['ClaveProducto']===event.target.value
+                })
+                //console.log(event.target.id.slice(-15,1))
+                if(Prod.length >0 && event.target.id.slice(-15) ==='0-ClaveProdServ'){                    
+                    const one = document.querySelector("#pills-tabContent-inlineid_ingreso_conceptos_set-0-id")
+                    const mat = one.querySelectorAll("div.col")    
+                    mat.forEach((e)=>{
+                        //console.log(e.firstElementChild.id)
+                        this.fields(e.firstElementChild.id, Prod)
+                    })
+                }else{
+                    const one = document.querySelector("#pills-tabContent-inlineid_ingreso_conceptos_set-1-id")
+                    const mat = one.querySelectorAll("div.col")
+                    mat.forEach((e)=>{
+                        //console.log(e.firstElementChild.id)
+                        this.fields(e.firstElementChild.id, Prod)
+                    })    
+                }
+            },
+            async Calc(event){
+                let ori = event.target.id.slice(25,26)                
+                let cant     = document.getElementById('id_ingreso_conceptos_set-'+ori+'-Cantidad')
+                let valUni   = document.getElementById('id_ingreso_conceptos_set-'+ori+'-ValorUnitario')            
+                let importe  = document.getElementById('id_ingreso_conceptos_set-'+ori+'-Importe')
+                let desc     = document.getElementById('id_ingreso_conceptos_set-'+event.target.id.slice(-10,-9)+'-Descuento')
+                let total    = cant.value * valUni.value
+                if(desc >0){
+                    total -= desc.value
+                    importe.value = total.toFixed(4)
+                }else{
+                    importe.value = total.toFixed(4)
+                }
+
+            },
+            async fields(id, Prod){
+                let ori = id.slice(25,26)
+                //console.log('ori',ori)
+                switch(id)
+                {
+                    case 'id_ingreso_conceptos_set-'+ori+'-Descripcion':                        
+                        document.getElementById(id).value = Prod[0].Descripcion
+                        break
+                        
+                    case 'id_ingreso_conceptos_set-'+ori+'-ClaveUnidad':
+                        
+                        document.getElementById(id).value = Prod[0].Unidad
+                        break
+                    case 'id_ingreso_conceptos_set-'+ori+'-Descuento':
+                        document.getElementById(id).value = 0
+                        break
+                    case 'id_ingreso_conceptos_set-'+ori+'-ValorUnitario':
+                        document.getElementById(id).value = Prod[0].ValorUnitario
+                        break
+                    case 'id_ingreso_conceptos_set-'+ori+'-Unidad':
+                        document.getElementById(id).value = Prod[0].Unidad
+                        break
+                    case 'id_ingreso_conceptos_set-'+ori+'-IVA':
+                        document.getElementById(id).checked = Prod[0].IVA
+                        break
+                    case 'id_ingreso_conceptos_set-'+ori+'-IVA_Ret':
+                        document.getElementById(id).checked = Prod[0].IVA_Ret 
+                        break
+                    case 'id_ingreso_conceptos_set-'+ori+'-ISR':
+                        document.getElementById(id).checked = Prod[0].ISR
+                        break
+                }
+                
+                
+                
+                
+                
+            },
+            async get_c_ProdServ(event, bool){
+                let ch_Desc
+                if(event.target.id.slice(-15) ==='0-ClaveProdServ'){
+                    ch_Desc = this.ch_0
+                }else{
+                    ch_Desc = this.ch_1
+                }            
+                let response 
+                response = await this.sendRequest(`/cats/c_ClaveProdServView/?prod=${event.target.value}&desc=${ch_Desc}`, 'get')
+                let resolve  = Promise.resolve(response)
+                resolve.then(res =>{
+                    return res.json()
+                })
+                .then((data)=>{
+                    return this.c_ProdServS = data["ProdServ"]
+                })
+            },
+            valid(event){
+                
+                let target
+                let valid = false
+                
+                switch (event.target.ariaLabel)
+                {
+                    case 'id_LugarExpedicion':
+                        target = event.target.ariaLabel
+                        let t = Object.values(this.c_CodigoPostalS).find((p)=>{
+                            return p.CodigoPostal===event.target.value                            
+                        })
+                        //console.log(`${target}`, t, t.CodigoPostal, 'event.target.value',event.target.value) 
+                        valid = t.CodigoPostal === event.target.value ? true : false
+                        console.log('valid? ',valid)
+                        break
+                    case 'id_Rfc_Rec':
+                        let el = Object.values(this.c_ClienteS).find((RFC)=>{
+                            return RFC.RFC===event.target.value
+                        }) 
+                        //console.log('el', el, 'this.Nombre_Rec', this.Nombre_Rec )
+                        if(el.RFC.length > 0 ){
+                            console.log('ONTOy ',this.Nombre_Rec, el)
+                            id_RegimenFiscal_Rec.value  =el.Regimen
+                            id_Nombre_Rec.value         = el.Nombre                            
+                            id_DomicilioFiscal_Rec.value= el.Domicilio
+                            id_ResidenciaFiscal_Rec.value = el.Recidencia
+                            id_NumRegIdTrib_Rec.value    = el.Tax_id
+                            id_UsoCFDI_Rec.value    = el.Uso_CFDI
+                        }else{
+                            return alert('No valido RFC o cliente')
+                        }
+                        break
+                }
+                //console.log('F valid ', event.target.ariaLabel, 'valid', valid)
+                return valid
+                
+            },
+            onChange(event){
+                //console.log('target ',event, '  valor',event.target.value, 'length',event.target.value.length)
+                let txt = event.target.value
+                //console.log(event.target.ariaLabel)
+
+                let el  = document.getElementById(event.target.ariaLabel) 
+
+                if (txt.length >0 && el.value != txt.value ){
+                    if (this.valid(event)){
+                        el.value = event.target.value
+                    }else{
+                        return alert(`not valid value ${txt.value}`)
+                    }
+                }
+                
+            },
+
+        },
+
+    })
+
+    app.mount('#app')
+</script>
+{% endblock scripts %}
+
+    
+
+

@@ -1,0 +1,462 @@
+{% extends "pills.html" %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+
+{% block tab1 %}Generales{% endblock tab1 %}
+{% block tab2 %}Totales{% endblock tab2 %}
+{% block tab3 %}CFDI{% endblock tab3 %}
+{% block tab4 %}Receptor/Emisor{% endblock tab4 %}
+{% block tab5 %}Documentos Relacionados{% endblock tab5 %}
+
+{% block block_tab1 %}
+    <br>
+    <div class="row">
+        <div class="col-3">
+            {% render_field form.Ingreso.label %}
+            {% render_field form.Ingreso placeholder=form.Ingreso.label class+="form-control"  type="text" %}
+        </div>    
+        <div class="col-3">
+            {% render_field form.Serie.label %}
+            {% render_field form.Serie placeholder=form.Serie.label class+="form-control"  type="text" %}
+        </div>
+        <div class="col-3">
+            {% render_field form.Folio.label %}
+            {% render_field form.Folio placeholder=form.Folio.label class+="form-control"  type="text" %}    
+        </div>
+        <div class="col-3">
+            {% render_field form.Fecha.label %}
+            {% render_field form.Fecha placeholder=form.Fecha.label class+="form-control"  type="date" %}    
+        </div>
+
+        <div class="col-5">
+            {% render_field form.FormaPago.label %}
+            {% render_field form.FormaPago @change="onChange($event)" placeholder=form.FormaPago.label class+="form-select"  type="text" %}
+        </div>
+
+        <div class="col-3">
+            {% render_field form.TipoCambio.label %}
+            {% render_field form.TipoCambio placeholder=form.TipoCambio.label class+="form-control"  type="number" min="1" max="100" %}        
+        </div>
+        <div class="col-3">
+            {% render_field form.Moneda.label %}
+            {% render_field form.Moneda placeholder=form.Moneda.label class+="form-control"  type="text" %}        
+        </div>
+        <div class="col-3">
+            {% render_field form.Exportacion.label %}
+            {% render_field form.Exportacion placeholder=form.Exportacion.label class+="form-control"  type="text" %}
+        </div>
+        <div class="col-3">
+            {% render_field form.Estado_CFDI.label %}
+            {% render_field form.Estado_CFDI|append_attr:"readonly:readonly" placeholder=form.Estado_CFDI.label class+="form-control"  type="text" %}
+        </div>
+        
+        
+    </div>    
+    <br>
+    <div class="row">
+        
+        <div class="col-5">
+            {% render_field form.MetodoPago.label %}
+            {% render_field form.MetodoPago @keyup="get_c_CodigoPostal($event, false)" @change="onChange($event)"  placeholder=form.MetodoPago.label class+="form-control"  type="text" %}            
+        </div>
+        <div class="col-4">
+            <label for="cat_CP"><strong>Codigo Postal</strong></label>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <div class="input-group-text">
+                    <div class="row">
+                      <div class="col-2">
+                        <input v-model="ch_edo" type="checkbox" >
+                      </div>
+                      <div class="col-2">
+                        <abbr title="seleccionar Checkbox para buscar por nombre del Estado">
+                          Buscar por Estado
+                        </abbr>
+                      </div>
+                    </div>
+                    
+                  </div>
+                </div>
+                {% render_field form.LugarExpedicion  placeholder=form.LugarExpedicion.label aria-label="id_LugarExpedicion" class+="form-control" autocomplete="off" list="CP" @keyup="get_c_CodigoPostal($event, false)" @change="onChange($event)"  type="text" %}
+                <datalist id="CP">
+                    <option v-for="c_CodigoPostal in c_CodigoPostalS" v-bind:value="c_CodigoPostal.CodigoPostal">
+                        [[ c_CodigoPostal.CodigoPostal ]]-[[ c_CodigoPostal.Estado_c ]]
+                    </option>              
+                </datalist>              
+            </div>  
+        </div>
+    </div>
+{% endblock block_tab1 %}
+
+<!--(Totales)-->
+{% block block_tab2 %}
+    <br>
+    <div class="row">
+        <div class="col">
+            {% render_field form.SubTotal.label %}
+            {% render_field form.SubTotal|append_attr:"readonly:readonly" placeholder=form.SubTotal.label class+="form-control"  type="number" %}
+        </div>
+        <div class="col">
+            {% render_field form.Descuento.label %}
+            {% render_field form.Descuento placeholder=form.Descuento.label class+="form-control"  type="number" %}
+        </div>
+        <div class="col">
+            {% render_field form.Total.label %}
+            {% render_field form.Total|append_attr:"readonly:readonly" placeholder=form.Total.label class+="form-control"  type="number" %}
+        </div>
+        <div class="col">
+            {% render_field form.CondicionesDePago.label %}
+            {% render_field form.CondicionesDePago placeholder=form.CondicionesDePago.label class+="form-control"  type="text" %}
+        </div>
+    </div> 
+    <div class="row">
+        <div class="col">
+            {% render_field form.IVA.label %}
+            {% render_field form.IVA|append_attr:"readonly:readonly" placeholder=form.IVA.label class+="form-control"  type="number" %}
+        </div>
+        <div class="col">
+            {% render_field form.IVA_Ret.label %}
+            {% render_field form.IVA_Ret|append_attr:"readonly:readonly" placeholder=form.IVA_Ret.label class+="form-control"  type="number" %}
+        </div>
+        <div class="col">
+            {% render_field form.ISR.label %}
+            {% render_field form.ISR|append_attr:"readonly:readonly" placeholder=form.ISR.label class+="form-control"  type="number" %}
+        </div>
+    </div> 
+{% endblock block_tab2 %}
+
+<!--Pestaña (CFDI)-->
+{% block block_tab3 %}
+    <br>
+    <div class="row">
+        <div class="col">
+            {% render_field form.Version.label %}
+            {% render_field form.Version placeholder=form.Version.label class+="form-control"  type="text" %}        
+        </div>
+        <div class="col">
+            {% render_field form.Confirmacion.label %}
+            {% render_field form.Confirmacion|append_attr:"readonly:readonly" placeholder=form.Confirmacion.label class+="form-control"  type="text" %}        
+        </div>
+        <div class="col">
+            {% render_field form.TipoDeComprobante.label %}
+            {% render_field form.TipoDeComprobante|append_attr:"readonly:readonly" placeholder=form.TipoDeComprobante.label class+="form-control"  type="text" %}        
+        </div>
+        <div class="col">
+            {% render_field form.NoCertificado.label %}
+            {% render_field form.NoCertificado placeholder=form.NoCertificado.label class+="form-control"  type="text" %}
+        </div>
+        <div class="col">
+            {% render_field form.Certificado.label %}
+            {% render_field form.Certificado|append_attr:"readonly:readonly" placeholder=form.Certificado.label class+="form-control"  type="text" %}
+        </div>
+        <div class="col">
+            {% render_field form.Sello.label %}
+            {% render_field form.Sello|append_attr:"readonly:readonly" placeholder=form.Sello.label class+="form-control"  type="text" %}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            {% render_field form.UUID.label %}
+            {% render_field form.UUID|append_attr:"readonly:readonly" placeholder=form.UUID.label class+="form-control"  type="text" %}
+        </div>
+    </div>
+{% endblock block_tab3 %}
+    
+<!--Pestaña (Receptor/Emisor)-->
+{% block block_tab4 %}
+    <br>
+    <div class="row">
+        <p><b>Receptor:</b></p> 
+        <br>
+        <div class="row">
+            <div class="col-2">            
+                {% render_field form.Rfc_Rec placeholder="RFC" autocomplete="off" aria-label="id_Rfc_Rec" list="RfcEmi" @keyup="get_c_Clientes($event, false)" @change="valid($event)" class+="form-control"  type="text" %}
+                <datalist  id="RfcEmi">
+                    <option  v-for="c_Cliente in c_ClienteS" v-bind:value="c_Cliente.RFC">
+                        [[ c_Cliente.RFC ]]-[[ c_Cliente.Nombre ]]
+                    </option>
+                </datalist>
+            </div>
+            <div class="col-6">     
+                {% render_field form.Nombre_Rec placeholder="Nombre" class+="form-control"  type="text" %}
+            </div>
+        </div>
+        <br>
+        <br>
+        <div class="row">
+            <div class="col-2">     
+                {% render_field form.RegimenFiscal_Rec placeholder="Regimen Fiscal"  class+="form-select"  type="text" %}
+            </div>
+            <div class="col-2">     
+                {% render_field form.DomicilioFiscal_Rec placeholder="Domicilio(C.P.)"  class+="form-control"  type="text" %}
+            </div>
+            <div class="col">     
+                {% render_field form.ResidenciaFiscal_Rec placeholder="Recidencia(País)"  class+="form-select"  type="text" %}
+            </div>
+            <div class="col">     
+                {% render_field form.NumRegIdTrib_Rec placeholder="Tax id(si es extranjero)"  class+="form-control"  type="text" %}
+            </div>
+            <div class="col">     
+                {% render_field form.UsoCFDI_Rec placeholder="Uso CFDI" class+="form-control"   type="text" %}
+            </div>
+        </div>
+        
+    </div>
+
+    <hr>
+    <div class="row">
+        <p><b>Emisor:</b></p>
+        <div class="col">
+            {% render_field form.Rfc_Emi placeholder="RFC" class+="form-control"  type="text" %}
+        </div>
+        <div class="col">
+            {% render_field form.Nombre_Emi placeholder="Nombre" class+="form-control"  type="text" %}
+        </div>
+        <div class="col">
+            {% render_field form.RegimenFiscal_Emi placeholder="Regimen Fiscal" class+="form-control"  type="text" %}
+        </div>
+        <div class="col">
+            {% render_field form.FacAtrAdquirente_Emi placeholder="FacAtrAdquirente_Emi" class+="form-control"  type="text" %}
+        </div>
+    </div>
+{% endblock block_tab4 %}
+
+
+
+{% block block_tab5 %}
+<div class="card-body">
+    <div class="col-2">
+        
+        <a @click="checkDR(CFDI_Rel_id, $event)" id="addDR" class="btn btn-primary not-visible" >Agregar Documento Relacionado</a>
+    </div>
+    <br>
+    <div v-if="numDR > 0">
+        <div class="DRs">
+            <!--VUE table-->
+            <table class="table" >
+                <thead class="thead-dark">            
+                    <tr>
+                        <th scope="col">UUID</th>
+                        <th scope="col">Relacion</th>                
+                    </tr>
+                </thead>
+                <tbody>                                
+                    <tr class="item-row" v-for="(DR,i) in aTipoRelacionS" :key="i">  
+                        <th scope="row" >[[ DR.UUID ]]</th>
+                        <td>[[ DR.TipoRelacion ]]</td>  
+                        <td>
+                            <div class="btn-group">
+                                <a @click="LoadUUID(DR.id, DR.UUID, DR.TipoRelacion)" data-bs-toggle="modal" data-bs-target="#updateDRModal" class="btn btn-outline-primary">Editar</a>
+                                <a @click="BorraDR(DR.id)" id="delete-btn" class="btn btn-danger not-visible" >Borrar</a>
+                            </div>                        
+                        </td>                           
+                    </tr>                    
+                </tbody>
+            </table>
+            <!--END VUE TABLE-->
+        </div>
+    </div>
+    <div v-else>
+        <div>
+            <strong>No hay documentos Relacionados</strong>
+        </div>
+
+    </div>
+</div>
+<!--end card body-->
+<!--Add Modal DR-->
+<div class="modal fade" id="addDRModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agrega documento Relacionado</h5>
+                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" :id="CFDI_Rel_id">
+                <div class="col">
+                    <strong>UUID</strong>
+                    <input name="addUUID" class="form-control"  type="text"  v-model="UUID" maxlength="36" >
+                </div>
+                <div class="col">
+                    <strong>Tipo Relacion</strong>
+                    <div class="input-group mb-3">
+                        <select 
+                        id="caTipoRel" class="form-select" 
+                        v-model="TipoRel">
+                            <option v-for="c_TipoRel in c_TipoRelS" 
+                                    v-bind:value="c_TipoRel.Relacion"
+                                    
+                            >
+                                [[ c_TipoRel.Relacion ]]-[[ c_TipoRel.Descripcion ]]
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                <button @click="addDR(CFDI_Rel_id, $event)" type="submit" data-bs-dismiss="modal" class="btn btn-success">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--END Add Modal DR-->
+
+<!--Modal Update-->
+<div class="modal fade" id="updateDRModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Modifica documento Relacionado</h5>
+                <button class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" :id="CFDI_Rel_id">
+                <div class="col"  >
+                    <input type="hidden" name="id" :id="ID" v-model="ID"  >
+                </div>
+                <div class="col">
+                    <strong>UUID</strong>
+                    <input name="editUUID" class="form-control"  type="text"  v-model="UUID" maxlength="36">
+                    <a @click="" class="btn btn-danger not-visible"  data-bs-toggle="modal" data-bs-target="#uuidsModal">Lista UUIDS</a>
+                </div>
+                <div class="col">
+                    <strong>Tipo Relacion</strong>
+                    <div class="input-group mb-3">
+                        <select 
+                        id="caTipoRel" class="form-select" 
+                        v-model="TipoRel">
+                            <option v-for="c_TipoRel in c_TipoRelS" 
+                                    v-bind:value="c_TipoRel.Relacion"
+                                    
+                            >
+                                [[ c_TipoRel.Relacion ]]-[[ c_TipoRel.Descripcion ]]
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                <button @click="EditDR(ID, TipoRel, UUID)" type="button" class="btn btn-success">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--END Modal Update-->
+
+<!--UUIDS MODAL-->
+<div class="modal fade bd-example-modal-lg" id="uuidsModal" 
+data-bs-backdrop="static" data-bs-keyboard="false" 
+tabindex="-1" aria-labelledby="uuidsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="uuidsModalLabel">Lista UUIDS</h5>
+                <button  type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead class="thead-dark">            
+                        <tr>
+                            <th scope="col">UUID</th>
+                            <th scope="col">Relacion</th>                
+                        </tr>
+                    </thead>
+                    <tbody>                                
+                        <tr class="item-row" v-for="(DR,i) in aTipoRelacionS" :key="i">  
+                            <th scope="row" >[[ DR.UUID ]]</th>
+                            <td>[[ DR.TipoRelacion ]]</td>                            
+                        </tr>                    
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                    <button type="button"  class="btn btn-success">delete</button>
+                
+            </div>
+        </div>
+    </div>
+</div>
+<!--END UUIDS MODAL-->
+
+{% endblock block_tab5 %}
+
+
+
+{% block Inline_formM %}
+<div class="card-body">
+    {% if ingreso_inline_formset %}
+        <h5 class="text-info">Add Conceptos</h5>
+
+        {{ ingreso_inline_formset.non_form_errors }}                  
+        {% for form in ingreso_inline_formset   %}             
+            {{ ingreso_inline_formset.management_form }}
+            {% include "Ingreso_C.html" %}        
+            <br>
+            <hr>            
+        {% endfor %}
+    {% else %}
+      
+        <div class="row">
+            <div class="bs-example">
+                <div class="bg-light clearfix">
+                    <a class="btn btn-primary float-right" href="{% url 'ingreso_concepto-create-view' id %}">Crear Partida</a>
+                </div>
+            </div>            
+        </div>
+        
+        <table class="table">
+            <thead class="thead-dark">        
+                <tr>
+                    <th scope="col">Clave Producto/Servicio</th>
+                    <th scope="col">Cantidad</th>
+                    <th scope="col">Importe</th>
+                    <th scope="col">Clave Unidad</th>
+                    <th scope="col">Unidad</th>
+                    <th scope="col">Impuestos</th>
+                    <th scope="col">actions</th>        
+                </tr>
+            </thead>
+            <tbody>        
+                {% for ingreso in qs %}
+                    <tr>  
+                        <th scope="row">{{ingreso.ClaveProdServ}}</th>               
+                        <td>{{ingreso.Cantidad}}</td>
+                        <td>{{ingreso.Importe}}</td>
+                        <td>{{ingreso.ClaveUnidad}}</td>
+                        <td>{{ingreso.Unidad}}</td>
+                        <td>
+                            {% for p in Impuestos %}
+                                {% if p.Imp_Partida.id == ingreso.id %}
+                                    <div class=" border-top border-bottom">
+                                        
+                                        {% if p.Impuesto == '002' and p.Tipo_T_R == 'TRASLADO' %}
+                                            <strong>IVA: $</strong>
+                                        {% elif p.Impuesto == '002' and p.Tipo_T_R == 'RETENCION' %}
+                                            <strong>IVA Ret.: $</strong>
+                                        {% elif p.Impuesto == '001' %}
+                                            <strong>ISR: $</strong>
+                                          
+                                        {% endif %}
+                                            {{p.Importe}}
+                                        
+                                    </div>                                
+                                {% endif %}
+                            {% empty %}
+                                <strong>Sin impuestos declarados</strong>
+                            {% endfor %}
+                        </td>
+                        <td><a href="{% url 'ingreso-concepto-update-view' ingreso.id %}" class="btn btn-outline-primary">Update</a></td>
+                        
+                    </tr>            
+                {% endfor %}        
+            </tbody>
+        </table>
+    {% endif %}
+</div>       
+ 
+{% endblock %} 

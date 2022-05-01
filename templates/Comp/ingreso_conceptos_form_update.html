@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block title %}Ingreso Concepto Create{% endblock title %}
+
+{% block content %}
+<h1>Parte Update</h1>
+{% crispy form %}
+
+{% endblock content %}
+
+{% block scripts %}
+    <script>
+        Vue.createApp({
+            el:'#app',
+            delimiters:['[[',']]'],
+            data() {
+              return {
+                message: 'Hello Vue!'
+              }
+            }
+          }).mount('#app')
+
+        const id_ClaveProdServ = document.getElementById('id_ClaveProdServ')
+
+        id_ClaveProdServ.addEventListener('keyup', e =>{
+            
+        })
+
+    </script>
+{% endblock scripts %}

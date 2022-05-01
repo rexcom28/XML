@@ -1,0 +1,247 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+
+{% block title %}REP{% endblock title %}
+
+{% block content %}
+<div id="app" v-cloak>
+    <form method="post">
+        <div class="card border-dark mb-3">
+            <div class="card-header">
+                <h2>Comprobante Pago</h2>        
+            </div>
+            <br>    
+            {% csrf_token %}            
+            <div class="columns p-2">
+                <div class="column is-8">
+                    <ul class="nav nav-pills -mb-3" id="pills-tab" role="tablist">
+                        <!--GENERALES-->
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">                            
+                                Generales
+                            </button>                            
+                        </li>
+                        <!--END GENERAL-->
+
+                        <!--TOTALES-->
+                        <li class="nav-item" role="presentation">                
+                            <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                                Receptor / Emisor
+                            </button>
+                        </li>
+                        <!--END TOTALES-->
+
+                        <!--CFDI-->
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
+                                CFDI
+                            </button>
+                        </li>
+                        <!--END CFDI-->
+
+                        <!--Receptor/Emisor-->
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-receptor-tab" data-bs-toggle="pill" data-bs-target="#pills-receptor" type="button" role="tab" aria-controls="pills-receptor" aria-selected="false">
+                                Tab 4
+                            </button>
+                        </li>
+                        <!--END Receptor/Emisor-->
+
+                        <!--Dcto Relacionados-->
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-rela-tab" data-bs-toggle="pill" data-bs-target="#pills-rela" type="button" role="tab" aria-controls="pills-rela" aria-selected="false">
+                                Tab 5
+                            </button>
+                        </li>
+                        <!--END Dcto Relacionados-->
+                    </ul>
+                    <br>
+                    <div class="tab-content" id="pills-tabContent">
+                        <!--GENERALES-->
+                        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                            
+                            <div class="row p-3">
+                                <div class="col">
+                                    {% render_field form.NumPago.label %}
+                                    {% render_field form.NumPago placeholder=form.NumPago.label class+="form-control"  type="text" %}
+                                </div>
+                                <div class="col">
+                                    {% render_field form.Serie.label %}
+                                    {% render_field form.Serie placeholder=form.Serie.label class+="form-control"  type="text" %}
+                                </div>
+                                <div class="col">
+                                    {% render_field form.Folio.label  %}
+                                    {% render_field form.Folio placeholder=form.Folio.label class+="form-control"  type="text" %}
+                                </div>
+                                <div class="col">
+                                    {% render_field form.Fecha.label %}
+                                    {% render_field form.Fecha placeholder=form.Fecha.label class+="form-control"  type="date" %}
+                                </div>
+                                <div class="col">
+                                    {% render_field form.LugarExpedicion.label  %}
+                                    {% render_field form.LugarExpedicion placeholder=form.LugarExpedicion.label class+="form-control"  type="text" %}
+                                </div>
+                                <div class="col">
+                                    {% render_field form.Exportacion.label  %}
+                                    {% render_field form.Exportacion placeholder=form.Exportacion.label class+="form-control"  type="text" %}
+                                </div>
+                            </div>
+                            
+                        </div>
+                        <!--END GENERALES-->
+
+                        <!--RECEPTOR / EMISOR-->
+                        <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                            <!--RECEPTOR-->
+                            <div class="card border-dark p-3">
+                                <div class="card-header">
+                                    <h5 style="text-align: center;"><strong>RECEPTOR:</strong></h5>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="{{form.Rfc_Rec.id_for_label }}"><strong>RFC:</strong></label>
+                                        {% render_field form.Rfc_Rec placeholder=form.Rfc_Rec.label class+="form-control"  type="text" %}
+                                    </div>
+                                    <div class="col">
+                                        <label for="{{form.UsoCFDI_Rec.id_for_label }}"><strong>USO:</strong></label>
+                                        {% render_field form.UsoCFDI_Rec placeholder=form.UsoCFDI_Rec.label class+="form-select"  type="text" %}
+                                    </div>
+                                </div>
+                                <div class="row">                                    
+                                    <div class="col">
+                                        <label for="{{form.Nombre_Rec.id_for_label }}"><strong>Nombre:</strong></label>
+                                        {% render_field form.Nombre_Rec placeholder=form.Nombre_Rec.label class+="form-control"  type="text" %}
+                                    </div>
+                                    <div class="col">
+                                        <label for="{{form.RegimenFiscal_Rec.id_for_label }}"><strong>Regimen Fiscal:</strong></label>
+                                        {% render_field form.RegimenFiscal_Rec placeholder=form.RegimenFiscal_Rec.label class+="form-select"  type="text" %}
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="{{form.DomicilioFiscal_Rec.id_for_label }}"><strong>Domicilio Fiscal:</strong></label>
+                                        {% render_field form.DomicilioFiscal_Rec placeholder=form.DomicilioFiscal_Rec.label class+="form-control"  type="text" %}
+                                    </div>
+                                    <div class="col">
+                                        <label for="{{form.ResidenciaFiscal_Rec.id_for_label }}"><strong>Recidencia Fiscal:</strong></label>
+                                        {% render_field form.ResidenciaFiscal_Rec placeholder=form.ResidenciaFiscal_Rec.label class+="form-control"  type="text" %}
+                                    </div>
+                                    <div class="col">
+                                        <label for="{{form.NumRegIdTrib_Rec.id_for_label }}"><strong>ID Tributario(Tax Id):</strong></label>
+                                        {% render_field form.NumRegIdTrib_Rec placeholder=form.NumRegIdTrib_Rec.label class+="form-control"  type="text" %}
+                                    </div>
+                                </div>
+                            </div>
+                            <br>
+                            <!--EMISOR-->
+                            <div class="card border-dark p-3">
+                                <div class="card-header">
+                                    <h5 style="text-align: center;"><strong>Emisor:</strong></h5>
+                                </div>
+                                <br>
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="{{form.Rfc_Emi.id_for_label }}"><strong>RFC:</strong></label>
+                                        {% render_field form.Rfc_Emi placeholder=form.Rfc_Emi.label class+="form-control"  type="text" %}
+                                    </div>
+                                    <div class="col">
+                                        <label for="{{form.Nombre_Emi.id_for_label }}"><strong>Nombre:</strong></label>
+                                        {% render_field form.Nombre_Emi placeholder=form.Nombre_Emi.label class+="form-control"  type="text" %}
+                                    </div>
+                                    <div class="col">
+                                        <label for="{{form.RegimenFiscal_Emi.id_for_label }}"><strong>Regimen Fiscal:</strong></label>
+                                        {% render_field form.RegimenFiscal_Emi placeholder=form.RegimenFiscal_Emi.label class+="form-select"  type="text" %}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                        <!--END RECEPTOR / EMISOR-->
+
+                        <!--CFDI-->
+                        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                            <div class="card border-dark p-3">
+                                <div class="card-header">
+                                    <h5 style="text-align: center;"><strong>Datos del CFDI:</strong></h5>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <label for="{{form.TipoDeComprobante.id_for_label }}"><strong>Tipo Comprobante:</strong></label>
+                                        {% render_field form.TipoDeComprobante|append_attr:"readonly:readonly" placeholder=form.TipoDeComprobante.label class+="form-control"  type="text" %}
+                                    </div>
+                                    <div class="col">
+                                        <label for="{{form.Version.id_for_label }}"><strong>Versión:</strong></label>
+                                        {% render_field form.Version|append_attr:"readonly:readonly" placeholder=form.Version.label class+="form-control"  type="text" %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!--END CFDI-->
+
+                        <div class="tab-pane fade" id="pills-receptor" role="tabpanel" aria-labelledby="pills-receptor-tab">
+                            {% block block_tab4 %}{% endblock block_tab4 %}
+                        </div>
+
+                        <div class="tab-pane fade" id="pills-rela" role="tabpanel" aria-labelledby="pills-rela-tab">
+                            {% block block_tab5 %}{% endblock block_tab5 %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if form.errors %}
+            {% for field in form %}                
+                {% for error in field.errors %} 
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }} </strong>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
+        <div class="mt-3 mb-5 row">
+            <div class="col-3">
+                <button type="submit" class="px-5 btn btn-success">Guardar Comprobante</button>
+            </div>
+            <div class="col-3">
+                <a href="{% url 'compPagos_list' %}" class="px-5 btn btn-primary"><i class="fa fa-arrow-circle-left"></i> Lista REP</a>
+            </div>
+            
+        </div>
+        {% if pago_inline_formset %}
+        {{ pago_inline_formset.non_form_errors }}             
+            {% include "REP/InlinePagosForm.html" %}
+        {% endif %}
+    </form>
+
+    
+    {% if not pago_inline_formset %}
+        {% include "REP/tableInlinePagos.html" %}
+    {% endif %}
+              
+
+            
+    
+</div>
+{% endblock content %}
+{% block scripts %}
+<script>
+    const app = Vue.createApp({
+        el:'#app',
+        delimiters:['[[',']]'],
+        data(){
+            return{
+
+            }
+        },
+        mounted(){
+
+        },
+        methods: {
+            
+        },
+    })
+    app.mount('#app')
+</script>
+{% endblock scripts %}

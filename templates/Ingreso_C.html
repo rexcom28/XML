@@ -1,0 +1,122 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+
+
+<div class="columns">
+    <div class="column is-8">
+        <ul class="nav nav-pills -mb-3" id={{"pills-tab-inline"|add:form.id}} role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id={{"pills-home-tab-inline"|add:form.id.auto_id}} data-bs-toggle="pill" data-bs-target={{"#pills-home-inline"|add:form.id.auto_id}} type="button" role="tab" aria-controls={{"pills-home-inline"|add:form.id.auto_id}} aria-selected="true">                    
+                    General Concepto
+                </button>                            
+            </li>
+            <li class="nav-item" role="presentation">                
+                <button class="nav-link" id={{"pills-contact-tab-inline"|add:form.id.auto_id}} data-bs-toggle="pill" data-bs-target={{"#pills-contact-inline"|add:form.id.auto_id}} type="button" role="tab" aria-controls="pills-contact-inline" aria-selected="false">
+                    Totales Concepto
+                </button>
+            </li>
+            <!--li>{{ form.DELETE }} {{ form.DELETE.label }}</li-->
+        </ul>
+        <div class="tab-content" id={{"pills-tabContent-inline"|add:form.id.auto_id}}>
+            <hr>
+            <br>
+            <div class="tab-pane fade show active" id={{"pills-home-inline"|add:form.id.auto_id}} role="tabpanel" aria-labelledby={{"pills-home-tab-inline"|add:form.id.auto_id}}>                
+                <div class="row">
+                    <div class="row">
+                        <div class="col-6">  
+                            <div class="row">
+                                <div class="col">
+                                    <label for="{{form.ClaveProdServ.auto_id}}" class="requiredField">Clave Producto/Servicio</label>
+                                </div>
+                                <div class="col">
+                                    <input v-model="{{""|add:"ch_"}}{{form.id.auto_id|slice:"-4:-3"}}" type="checkbox" >
+                                    <abbr title="seleccionar Checkbox para buscar Producto/Servicio por descripcion">
+                                        <strong> Buscar por Descripcion</strong>
+                                    </abbr>
+                                </div>
+                            </div>                  
+                            
+                            {% render_field form.ClaveProdServ @change="fillProd($event)" @keyup="get_c_Producto($event, false)" list="Prod" placeholder=form.ClaveProdServ.label  class+="form-control"  type="text" autocomplete="off" %}                            
+                            
+                            <datalist id="Prod">
+                                <option  v-for="c_Producto in c_ProductoS" v-bind:value="c_Producto.ClaveProducto">
+                                [[ c_Producto.ClaveInterna ]]-[[ c_Producto.Descripcion ]]
+                                </option>              
+                            </datalist>                                                                       
+                        </div>
+
+                        <div class="col-6">
+                            Objeto Impuesto:                                                                                  
+                            {% render_field form.ObjetoImp placeholder=form.ObjetoImp.label class+="form-select"  type="select" autocomplete="off" %}
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col">
+                            Numero Identificación:
+                            {% render_field form.NoIdentificacion placeholder=form.NoIdentificacion.label class+="form-control"  type="text" %}
+                            
+                        </div>
+    
+                        <div class="col">
+                            Descripcion:
+                            {% render_field form.Descripcion placeholder=form.Descripcion.label class+="form-control"  type="text"  %}
+                        </div>
+                        <div class="col">
+                            ClaveUnidad:
+                            {% render_field form.ClaveUnidad placeholder=form.ClaveUnidad.label class+="form-control"  type="text"  %}
+                        </div>
+                    </div>                                        
+                </div>
+            </div>
+            <div class="tab-pane fade" id={{"pills-contact-inline"|add:form.id.auto_id}} role="tabpanel" aria-labelledby={{"pills-contact-tab-inline"|add:form.id.auto_id}}>
+                <div class="row">
+                    <div class="col">
+                        Descuento:
+                        {% render_field form.Descuento placeholder=form.Descuento.label class+="form-control"  type="number" step=1 min=0 %}
+                    </div>
+                    <div class="col">
+                        Cantidad:
+                        {% render_field form.Cantidad  placeholder=form.Cantidad.label @change="Calc($event)" class+="form-control"  type="number"  min=1 %}
+                    </div>
+                    <div class="col">
+                        Valor Unitario:
+                        {% render_field form.ValorUnitario placeholder=form.ValorUnitario.label @change="Calc($event)" class+="form-control"  type="number"  min=1 %}
+                    </div>
+                    <div class="col">
+                        Importe:
+                        {% render_field form.Importe placeholder=form.Importe.label class+="form-control"  type="number"  min=1 %}
+                    </div>
+                    <div class="col">
+                        
+                        Unidad:
+                        {% render_field form.Unidad placeholder=form.Unidad.label class+="form-control"  type="text"  %}
+                    </div>
+                </div>
+                <br>
+                
+                <div class="row">
+                    
+                    <div class="col">
+                        
+                        {% render_field form.IVA class+="form-checkbox"  type="checkbox"  %}
+                        <label ><strong>  IVA:</strong></label>
+                    </div>
+                       
+                    <div class="col">                        
+                        {% render_field form.IVA_Ret class+="form-checkbox"  type="checkbox"  %}
+                        <strong>IVA Retenido:</strong>
+                    </div>
+                    <div class="col">                        
+                        {% render_field form.ISR class+="form-checkbox"  type="checkbox"  %}
+                        <strong>ISR:</strong>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+
+    

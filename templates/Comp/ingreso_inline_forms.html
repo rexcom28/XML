@@ -1,0 +1,51 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+
+{% block title %}Ingreso con Partidas Create{% endblock title %}
+
+{% block content %}
+
+<div class="container mt-4">
+    <form method="post">
+        {% csrf_token %}
+        <div class="card">
+  
+            <div class="card-body">
+                
+                <div class="row">
+                    <div class="col">
+                        {% render_field form.Serie placeholder=form.Serie.label class+="form-control"  type="text" %}        
+                    </div>
+                    <div class="col">
+                        {% render_field form.Folio placeholder=form.Folio.label class+="form-control"  type="text" %}    
+                    </div>
+                    <div class="col">
+                        {% render_field form.Fecha placeholder=form.Fecha.label class+="form-control"  type="text" %}    
+                    </div>
+                    
+                    
+                </div>
+                
+                <br>
+                <h5 class="text-info">Add Conceptos</h5>
+                {{ ingreso_inline_formset.non_form_errors }}
+                {{ ingreso_inline_formset.management_form }}
+                {% for form in ingreso_inline_formset %}
+                   
+                    <div class="d-flex py-1 inline {{ ingreso_inline_formset.prefix }}">
+                        <div>{{form.ClaveProdServ.label}}: {{ form.ClaveProdServ }}</div>
+                        <div class="ml-4">{{form.Cantidad.label}}: {{ form.Cantidad }}</div>
+                        {% if ingreso_inline_formset.can_delete %}
+                            <div class="ml-4">{{ form.DELETE }} {{ form.DELETE.label }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="mt-3 mb-5">
+            <button type="submit" class="px-5 btn btn-info">Submit</button>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

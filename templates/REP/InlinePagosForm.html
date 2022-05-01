@@ -1,0 +1,46 @@
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+
+<div class="card border-dark mb-3">
+    <div class="card-header">
+        <h2>Pagos</h2>       
+    </div> 
+    {% for field in pago_inline_formset.management_form %}
+                    
+        {% for error in field.errors %} 
+        {{field.name}}
+            <div class="alert alert-danger">
+                <strong>{{ error|escape }}</strong>
+            </div>
+        {% endfor %}
+    {% endfor %} 
+    {% for form in pago_inline_formset   %}  
+            {{pago_inline_formset.management_form}}
+        <div class="row p-3">
+            
+            <div class="col">
+                <label for="{{form.FechaPago.id_for_label }}"><strong>Fecha del Pago:</strong></label>
+                {% render_field form.FechaPago @change="fechaPag($event)" placeholder=form.FechaPago.label class+="form-control"  type="date" %}
+            </div>
+            <div class="col">
+                <label for="{{form.FormaDePagoP.id_for_label }}"><strong>Forma de Pago:</strong></label>
+                {% render_field form.FormaDePagoP   placeholder=form.FormaDePagoP.label class+="form-select"   type="text" %}
+            </div>
+            <div class="col">
+                <label for="{{form.MonedaP.id_for_label }}"><strong>Moneda:</strong></label>
+                {% render_field form.MonedaP placeholder=form.MonedaP.label class+="form-control"  type="text" %}
+            </div>
+            <div class="col">
+                <label for="{{form.TipoCambioP.id_for_label }}"><strong>Tipo Cambio:</strong></label>
+                {% render_field form.TipoCambioP placeholder=form.TipoCambioP.label class+="form-control"  type="number" %}
+            </div>
+            <div class="col">
+                <label for="{{form.Monto.id_for_label }}"><strong>Monto:</strong></label>
+                {% render_field form.Monto placeholder=form.Monto.label class+="form-control"  type="number" %}
+            </div>
+        </div>
+
+        <br>
+        <hr>            
+    {% endfor %}
+</div>

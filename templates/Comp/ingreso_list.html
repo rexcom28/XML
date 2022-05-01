@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Ingresos
+{% endblock title %}
+
+{% block content %}
+    <div id="app" v-cloak>
+        <br>
+        <h5 style="text-align: center; ">Comprobantes Ingreso</h5>
+        <hr>
+        <div class="row">
+            <a class="btn btn-primary" href="{% url 'ingreso-create-view' %}">Crear Ingreso</a>
+        </div>
+
+        <hr>
+        <div class="bd-example">
+            <div class="table-responsive-sm">
+                <table class="table">
+                    <thead class="thead-dark">
+                        
+                        <tr>
+                            <th scope="col">Ingreso</th>
+                            <th scope="col">Fecha</th>
+                            <th scope="col">Moneda</th>
+                            <th scope="col">Forma de Pago</th>
+                            <th scope="col">Total</th>
+                            <th scope="col">Estado CFDI</th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody>        
+                        {% for ingreso in object_list %}
+                            <tr>  
+                                <th scope="row">{{ingreso.Ingreso}}- {{ingreso.id}}</th>
+                                <td>{{ingreso.Fecha}}</td>
+                                <td>{{ingreso.Moneda}}</td>
+                                <td>{{ingreso.FormaPago}}</td>
+                                <td>{{ingreso.Total}}</td>
+                                <td>{{ingreso.Estado_CFDI}}</td>
+                                
+                                <td>
+                                    <a href="{% url 'ingreso-update-view' ingreso.id %}" class="btn btn-outline-primary">Editar</a>
+                                    <button id="delete-btn" class="btn btn-danger not-visible" @click="get_id({{ingreso.id}},'{{ingreso.Ingreso}}')" data-bs-toggle="modal" data-bs-target="#deleteModal">Borrar</button>                    
+                                </td>
+                                
+                            </tr>           
+                        {% endfor %}        
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!--modal delete -->
+        <div class="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Delete Ingreso</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        Are you sure you want to delete Ingreso:  <b>[[ ingreso ]]</b> ?
+                    </div>
+                    <div class="modal-footer">
+                        <form @submit="checkform" id="delete-form" :action="[[ id ]]" method="POST">
+                            {% csrf_token %}
+                            <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                            <button type="submit"  class="btn btn-success">delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+    </div>
+{% endblock content %}
+
+{% block scripts %}
+    <script>
+        Vue.createApp({
+            el:'#app',
+            delimiters:['[[',']]'],
+            data() {
+            return {
+                id:'',
+                ingreso:''
+                }
+            },
+            mounted() {
+                
+            },
+            methods: {
+                async get_id(ids, ingre){
+                    this.ingreso = ingre
+                    this.id=`delete/${ids}/ingreso/`
+                    console.log('get_id', ids,ingre)
+                },
+                async checkform(e){
+                    console.log(this.ingreso,'  ',this.id)
+                    //e.preventDefault();
+                }
+                
+                
+            },
+        }).mount('#app')
+
+
+
+    </script>
+{% endblock scripts %}
+    
+
+    

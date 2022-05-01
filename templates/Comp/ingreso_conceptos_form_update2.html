@@ -1,0 +1,407 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+{% load crispy_forms_tags %}
+
+{% block title %}Ingreso Concepto {% endblock title %}
+
+{% block content %}
+<div id="app" v-cloak>
+  <h1> Comprobante: {{ Numcomp.Comprobante }} </h1>
+  <form method="POST" @submit="checkform" >
+      {% csrf_token %}
+      
+      <div class="form-group">
+        <div class="row">
+          <div class="col-2">
+            <label for="{{form.ClaveProdServ.auto_id}}" class="requiredField">{{form.ClaveProdServ.label}}</label>
+          {% render_field form.ClaveProdServ placeholder=form.ClaveProdServ.label class+="form-control"  type="text" %}
+          </div>        
+          <div class="col-8">
+            <label for="cat_prod">
+              <strong>
+                Catalogo Productos/Servicios:
+              </strong>                    
+            </label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <div class="row">
+                    <div class="col-2">
+                      <input v-model="ch_Desc" type="checkbox" >
+                    </div>
+                    <div class="col-2">
+                      <abbr title="seleccionar Checkbox para buscar Producto/Servicio por descripcion">
+                        Buscar por Descripción
+                      </abbr>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+              <input autocomplete="off" aria-label="id_ClaveProdServ" id="catProd" type="text" list="Prod"  class="form-control" @keyup="get_c_ProdServ($event, false)" @change="onChange($event)"  />
+              <datalist id="Prod">
+                <option  v-for="c_ProdServ in c_ProdServS" v-bind:value="c_ProdServ.ProductoServ">
+                  [[ c_ProdServ.ProductoServ ]]-[[ c_ProdServ.Descripcion ]]
+                </option>              
+              </datalist>              
+            </div>                      
+          </div>          
+        </div>
+        
+      </div>
+
+      
+      <!--ClaveUnidad-->
+      <div class="form-group">
+        <div class="row">
+          <div class="col-2">
+            <label for="{{form.ClaveUnidad.auto_id}}" class="requiredField">{{form.ClaveUnidad.label}}</label>
+            {% render_field form.ClaveUnidad placeholder=form.ClaveUnidad.label  class+="form-control"  type="text" %}
+          </div>
+          <div class="col-8">
+            <label for="cat_prod">
+              <strong>
+                Catalogo Unidades Medida:
+              </strong>      
+              
+            </label>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <div class="input-group-text">
+                  <div class="row">
+                    <div class="col-2">
+                      <input v-model="ch_Desc_UM" type="checkbox" >
+                    </div>
+                    <div class="col-2">
+                      <abbr title="seleccionar Checkbox para buscar Unidad Medida por descripcion">
+                        Buscar por Descripción
+                      </abbr>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+              <input autocomplete="off" aria-label="id_ClaveUnidad" id="catUniMed" type="text" list="UniMed"  class="form-control" @keyup="get_c_ClaveUnidad($event, false)" @change="onChange($event)"  />
+              <datalist id="UniMed">
+                <option v-for="c_ClaveUnidad in c_ClaveUnidadS" v-bind:value="c_ClaveUnidad.ClaveUnidad">
+                  [[ c_ClaveUnidad.ClaveUnidad ]]-[[ c_ClaveUnidad.Nombre ]]
+                </option>              
+              </datalist>              
+            </div>                      
+          </div> 
+        </div>
+      </div>
+      
+      
+      <!--Objeto Impuesto-->
+      <div class="row">
+        <div class="col-6">
+          <div class="form-group">
+            <label for="{{form.ObjetoImp.auto_id}}" class="requiredField">{{form.ObjetoImp.label}}</label>
+            {% render_field form.ObjetoImp placeholder=form.ObjetoImp.label class+="form-control"  type="text" %}
+          </div>
+        </div>
+
+        <div class="col-6">
+          <label for="cat_prod">
+            <strong>
+              Catalogo Es Objeto de Impuesto:
+            </strong>                  
+          </label>
+
+          <div class="input-group mb-3">
+            <select aria-label="id_ObjetoImp"  id="catObjImp" class="form-select"   @change="onChange($event)" v-model="c_ObjetoImp_Selected">
+              <option  v-for="c_ObjetoImp in c_ObjetoImpS" v-bind:value="c_ObjetoImp.ObjetoImp" >
+                [[ c_ObjetoImp.ObjetoImp ]]-[[ c_ObjetoImp.Descripcion ]]
+              </option>
+            </select>         
+          </div>                      
+        </div>
+
+
+      </div>
+
+      <div class="form-group">        
+        <label for="{{form.Unidad.auto_id}}" class="requiredField">{{form.Unidad.label}}</label>
+        {% render_field form.Unidad placeholder=form.Unidad.label class+="form-control"  type="text" %}
+      </div>
+      <div class="form-group">
+        <label for="{{form.Descripcion.auto_id}}" class="requiredField">{{form.Descripcion.label}}</label>
+        {% render_field form.Descripcion placeholder=form.Descripcion.label class+="form-control"  type="text" %}
+      </div>
+
+      <div class="row">
+        <div class="col-3">
+          <div class="form-group">
+            <label for="{{form.Cantidad.auto_id}}" class="requiredField">{{form.Cantidad.label}}</label>
+            {% render_field form.Cantidad  @change="Calc($event )" placeholder=form.Cantidad.label class+="form-control"  type="number" %}
+          </div>
+        </div>
+        
+
+        <div class="col-3">
+          <div class="form-group">        
+            <label for="{{form.ValorUnitario.auto_id}}" class="requiredField">{{form.ValorUnitario.label}}</label>                  
+            {% render_field form.ValorUnitario @change="Calc($event)" placeholder=form.ValorUnitario.label class+="form-control"  type="number" %}            
+          </div>    
+        </div>
+
+        <div class="col-3">
+          <div class="form-group">
+            <label for="{{form.Importe.auto_id}}" class="requiredField">{{form.Importe.label}}</label>
+            {% render_field form.Importe  placeholder=form.Importe.label class+="form-control"  type="number" %}
+          </div>
+        </div>
+        <div class="col-3">
+          <div class="form-group">
+            <label for="{{form.Descuento.auto_id}}" class="requiredField">{{form.Descuento.label}}</label>
+            {% render_field form.Descuento placeholder=form.Descuento.label class+="form-control"  type="number" min=0 %}
+          </div>  
+        </div>
+      </div>
+      <br>
+      <br>
+      <div class="row">
+          
+          <div class="col-3">
+              <strong>IVA:</strong>
+              {% render_field form.IVA class+="form-checkbox"  type="checkbox"  %}
+          </div>
+          <div class="col-3">
+            <strong>IVA Retenido:</strong>
+              {% render_field form.IVA_Ret class+="form-checkbox"  type="checkbox"  %}
+          </div>
+          <div class="col-3">
+            <strong>ISR:</strong>
+              {% render_field form.ISR class+="form-checkbox"  type="checkbox"  %}
+          </div>
+      </div>
+      {% render_field form.Comprobante placeholder=form.Comprobante.label class+="form-control"  type="hidden" %}
+      
+      <br>
+      
+        <div class="row">
+          <div class="col-2">
+            <button type="submit"  class="px-5 btn btn-info">Guardar</button>          
+          </div>
+          <div class="col-6">
+            <a class="btn btn-outline-success pull-right" href="{% url 'ingreso-update-view' Numcomp.Comprobante.id  %}">Encabezado</a>
+          </div>
+        </div>
+  </form>
+</div>
+{% endblock content %}
+{% block scripts %}
+  <script>
+    Vue.createApp({
+      el:'#app',
+      delimiters:['[[',']]'],
+      data() {
+        return {
+          csrf:null,
+          obje: {},
+          colName:'',
+          ch_Desc: false,
+          c_ProdServS :[],
+          c_ProdServ :{},
+
+          ch_Desc_UM: false,
+          c_ClaveUnidadS: [],  
+          c_ClaveUnidad:{},                  
+          
+          c_ObjetoImpS : [],
+          c_ObjetoImp: {},
+          c_ObjetoImp_Selected:'',
+
+     
+          
+        }
+      },
+      mounted() {        
+        this.created()
+      },
+      methods: {
+        async Calc(event){
+          let id_Cantidad     = document.getElementById('id_Cantidad').value
+          let id_ValorUnitario= document.getElementById('id_ValorUnitario').value
+          let id_Importe      = document.getElementById('id_Importe')
+          let id_Descuento      = document.getElementById('id_Descuento')
+          let total = id_Cantidad * id_ValorUnitario
+          console.log(id_Descuento)
+          if(id_Descuento.value=='' ){
+            id_Descuento.value=0
+          }
+          total = total.toFixed(4)
+          id_Importe.value =total
+
+        },
+        async onChange(event){   
+
+          //let el = !!document.getElementById(event)
+          //console.log('aaaaaaaaaaaa',event.target) 
+          
+          if( !!event.target['form'] ===true ){
+            let obj , colName
+            [obj, colName] = await this.obj(event.target.id)
+            //console.log('OBJ ',obj,'    ','colName',colName)
+            
+            const result = obj.filter((e)=>{              
+              return e[colName] === event.target.value
+            })
+            //console.log('event: ', event.target.formTarget,event.target.value, result.length)
+            if(result.length === 0 ){
+              
+              str = event.target.value            
+              event.target.focus()
+              return alert(`"${str}"  not in cat rewrite a valid value.`)
+            }else{              
+              if (event.target.value.length >0 ){
+                document.getElementById(event.target.ariaLabel).value = event.target.value
+              }
+            }
+          }else{
+            console.log('else')
+            Object.entries(event.target).forEach(([key, value])=>{
+              
+              let valid = this.ValidForm(key, value.id, value.value, value)
+              console.log('valid', valid)
+              if(valid === false){
+                return alert(`El ${value.name} no esta en el catalogo`)
+              }
+            })
+          }                    
+        },
+        ValidForm(key, id, value, element ){
+          //console.log('ValidForm: ',key, id, value , element.type)
+          valid = false
+          switch(id){
+            case 'id_ClaveProdServ':
+              this.get_c_ProdServ(value,true)
+              const result = this.c_ProdServS.filter((e)=>{              
+                return e['ProductoServ'] === value
+              })
+              console.log('result.length', result.length)
+              if(result.length > 0){ 
+                valid = true
+              }
+              return valid
+              
+            case 'id_ClaveUnidad':              
+              return false
+            case 'id_ObjetoImp':
+              return true
+            case 'id_Cantidad':
+              return true
+            case 'id_ValorUnitario ':
+              return true
+            default:
+              return true            
+          }
+          
+
+        },
+        async obj(id){          
+          switch(id){
+            case 'catProd':
+              this.obje = this.c_ProdServS
+              this.colName = 'ProductoServ'
+              break 
+            case 'catUniMed':
+              this.obje = this.c_ClaveUnidadS
+              this.colName = 'ClaveUnidad'
+              break
+            case 'catObjImp':
+              this.obje = this.c_ObjetoImpS
+              this.colName = 'ObjetoImp'
+              break
+          }
+          
+          return [this.obje, this.colName]
+          
+
+        },
+        async checkform(e){
+          console.log('checkform',e.target[1])
+          //this.onChange(e)
+          //e.preventDefault();
+        },
+        async sendRequest(url, method, data){
+          var myHeaders = new Headers({
+            'Content-Type': 'application/json',
+            'X-Requested-With':'XMLHttpRequest'
+          });
+          
+          if(method!= 'get'){                                                                        
+            myheaders.set('X-CSRFToken', this.csrf )                  
+          };
+          
+          var response = await fetch(url,{
+              method: method,
+              headers: {
+                'Content-Type': 'application/json',
+                'X-Requested-With':'XMLHttpRequest'
+              },
+              body: data
+          });
+          
+          return response
+        },
+        async getCsrfToken(){
+          if (this.csrf === null){
+              
+              let response = await this.sendRequest('http://127.0.0.1:8000/cats/csrf/', 'get');
+              let resolve = Promise.resolve(response);
+              resolve.then(res =>{
+                  return res.json();
+              })
+              .then((data) => {         
+                  console.log(this.csrf= data["csrf_token"])                                       
+                  return this.csrf= data["csrf_token"] ;
+              })
+              
+          }    
+                      
+        },
+        async get_c_ObjImp(){
+          this.c_ObjetoImpS.push({'ObjetoImp':'01', 'Descripcion': 'No objeto de impuesto.'})
+          this.c_ObjetoImpS.push({'ObjetoImp':'02', 'Descripcion': 'Sí objeto de impuesto.'})
+          this.c_ObjetoImpS.push({'ObjetoImp':'03', 'Descripcion': 'Sí objeto del impuesto y no obligado al desglose.'})
+          //console.log(this.c_ObjetoImpS)
+        },
+        async get_c_ProdServ(event, bool){
+          let response 
+          
+          if(bool){            
+            response = await this.sendRequest(`http://127.0.0.1:8000/cats/c_ClaveProdServView/?prod=${event}`, 'get')
+          }else{ 
+            response = await this.sendRequest(`http://127.0.0.1:8000/cats/c_ClaveProdServView/?prod=${(bool ? '':event.target.value)}&desc=${this.ch_Desc}`, 'get')
+          }
+          let resolve = Promise.resolve(response)
+          resolve.then(res =>{
+            return res.json()
+          })
+          .then((data) =>{
+            console.log(data)
+            return this.c_ProdServS = data["ProdServ"]
+          })          
+        },
+        async get_c_ClaveUnidad(event,bool){
+          let response = await this.sendRequest(`http://127.0.0.1:8000/cats/c_ClaveUnidadView/?UniMed=${(bool ? '':event.target.value)}&Desc_UniMed=${this.ch_Desc_UM}`, 'get')
+          let resolve = Promise.resolve(response)
+          resolve.then(res =>{
+            return res.json()
+          })
+          .then((data) =>{
+            return this.c_ClaveUnidadS = data["UniMedida"]
+          })
+        },
+        async created(){
+          
+
+          this.get_c_ObjImp()
+        }
+        
+      },
+    }).mount('#app')  
+  </script>
+{% endblock scripts %}

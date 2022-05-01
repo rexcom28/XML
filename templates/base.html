@@ -1,0 +1,175 @@
+
+<!doctype html>
+<html lang="en" >
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <!--link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous"-->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    
+
+    <title>{% block title %}{% endblock title %}</title>
+
+    <style>
+      [v-cloak] {
+        display: none;
+      }
+      
+      .sidenav {
+        height: 100%;
+        width: 0;
+        position: fixed;
+        z-index: 1;
+        top: 0;
+        left: 0;
+        background-color: #111;
+        overflow-x: hidden;
+        transition: 0.5s;
+        padding-top: 60px;
+      }
+      
+      .sidenav a {
+        padding: 8px 8px 8px 32px;
+        text-decoration: none;
+        font-size: 25px;
+        color: #818181;
+        display: block;
+        transition: 0.3s;
+      }
+      
+      .sidenav a:hover {
+        
+        color: #f1f1f1;
+      }
+      
+      .sidenav .closebtn {
+        position: absolute;
+        top: 0;
+        right: 25px;
+        font-size: 36px;
+        margin-left: 50px;
+      }
+      
+      @media screen and (max-height: 450px) {
+        .sidenav {padding-top: 15px;}
+        .sidenav a {font-size: 18px;}
+      }
+      
+      
+    </style>
+
+    
+  </head>
+  <body >
+      
+       
+      {% include "navbar.html" %}
+      
+      <div id="mySidenav" class="sidenav" >
+        <a href="javascript:void(0)" class="closebtn"   onclick="closeNav()">&times;</a>
+        <a href="{% url 'configuracionEmpresa' 1 %}">Configuración</a>
+        <a href="{% url 'ingreso-list-view' %}">Comprobantes</a>
+        <a href="{% url 'compPagos_list' %}">REP</a>
+        <a href="{% url 'cliente_list' %}">Clientes</a>                
+        <a href="{% url 'items_list' %}">Artículos</a>
+        
+      </div>
+     
+      
+      
+      <span style="font-size:30px;cursor:pointer " class="menu" onclick="openNav()">&#9776; Menú Repido</span>
+      
+      <div class="container">
+        {% block content %}
+            
+            
+        {% endblock content %}        
+      </div>
+    
+
+    <!--script src="https://unpkg.com/vue@3"></!--script-->
+    
+    <script src="https://unpkg.com/vue@next"></script>
+    <script src="https://unpkg.com/vue-router@4"></script>
+    
+    <script>
+
+      const getCookie =(name) => {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                // Does this cookie string begin with the name we want?
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+      } 
+      const csrf = getCookie('csrftoken')
+
+      async function sendRequest(url, method, data){
+        
+        
+        let myHeaders = new Headers({
+          'Content-Type': 'application/json',
+          'X-Requested-With':'XMLHttpRequest'
+        });
+        
+        if(method!= 'get'){                                                                        
+          myHeaders = new Headers({
+            'Content-Type': 'application/json',
+            'X-Requested-With':'XMLHttpRequest',
+            'X-CSRFToken': csrf 
+          })
+          
+        };
+        
+        var response = await fetch(url,{
+            method: method,
+            headers: myHeaders,
+            body: JSON.stringify(data)
+        });
+        
+        return response
+      }
+
+      async function get_c_CodigoPostal(event, bool){
+
+        //agregar control y pasar param para descripcion(estado)
+        let response
+        
+        
+        response = await sendRequest(`/cats/c_CodigoPostalView/?CoP=${event.target.value}`, 'get')
+        console.log('event',event.target.value, 'bool',bool, '{{ request.get_full_path  }}')
+        return response
+        
+      }
+      function openNav() {
+        
+        document.getElementById("mySidenav").style.width = "250px";
+      
+      }
+      
+      function closeNav() {
+        document.getElementById("mySidenav").style.width = "0";
+      }
+      
+    </script>
+    {% block scripts %}
+ 
+    {% endblock scripts %}
+    <!-- Bootstrap Bundle with Popper -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
+    <!-- Jquery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    
+  </body>
+  
+</html>

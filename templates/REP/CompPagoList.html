@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+
+{% block title %}Pagos{% endblock title %}
+
+{% block content %}
+<div id="app" v-cloak >
+    <br>
+    <h5 style="text-align: center;">Recibo Electronico de Pago</h5>
+    <hr>
+    <div class="row">
+        <a class="btn btn-primary" href="{% url 'compPagos_create' %}">Crear Pago</a>
+    </div>
+    <div class="table-responsive-sm">    
+        <table class="table">
+            <thead class="thead-dark">            
+                <tr>
+                    <th scope="col">Número Pago</th>
+                    <th scope="col">Fecha</th>
+                    <th scope="col">Lugar Expedición</th>
+                    <th scope="col">Exportación</th>
+                    <th scope="col">Versión</th>
+                    <th scope="col">Estado CFDI</th>                
+                </tr>
+            </thead>
+            <tbody>        
+                {% for Pago in object_list %}
+                    <tr>
+                        <th scope="row">{{Pago.NumPago}}</th>
+                        <td>{{Pago.Fecha}}</td>
+                        <td>{{Pago.LugarExpedicion}}</td>
+                        <td>{{Pago.Exportacion}}</td>
+                        <td>{{Pago.Version}}</td>
+                        <td>{{Pago.Estado_CFDI}}</td>
+                        <td>
+                            <div class="btn-group p-2">
+                                <a href="{% url 'compPagos_update' Pago.id %}"><button class="btn btn-outline-primary p-2">Editar</button></a>                    
+                                <button id="delete-btn" class="btn btn-outline-danger p-2" @click="get_id({{Pago.id}},'{{Pago.Folio}}')" data-bs-toggle="modal" data-bs-target="#deleteModal">delete</button>
+                                
+                                <!-- Example single danger button -->                        
+                                <a class="btn btn-primary dropdown-toggle" id="btnaction-{{Pago.id}}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Action
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="btnaction-{{Pago.id}}">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Separated link</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                {% endfor %}        
+            </tbody>
+        </table>  
+    </div>
+<!--Modal delete -->
+{% include "REP/CompPagoDel_modal.html" %}
+
+</div>
+{% endblock content %}
+{% block scripts %}
+    <script>
+        Vue.createApp({
+            el:'#app',
+            delimiters:['[[',']]'],
+            data() {
+            return {
+                id:'',
+                pago:''
+                }
+            },
+            mounted() {
+                
+            },
+            methods: {
+                async get_id(ids, pag){
+                    this.pago = pag
+                    this.id=`delete/${ids}/`
+                    console.log(this.id)
+                }, 
+            },
+        }).mount('#app')
+
+
+
+    </script>
+{% endblock scripts %}
+    

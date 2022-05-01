@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block title %}Producto Lista{% endblock title %}
+
+{% block content %}
+<div id="app" v-cloak class="container-fluid">
+    <br>
+    <div class="row">
+        <a class="btn btn-primary" href="{% url 'create_items' %}">Crear Producto</a>
+    </div>
+    <hr>
+    <table class="table">
+        <thead class="thead-dark">            
+            <tr>
+                <th scope="col">Prodcuto</th>
+                <th >Descripcion</th>
+                <th >Unidad</th>
+                <th >Valor Unitario</th>
+            </tr>
+        </thead>
+        <tbody>        
+            {% for producto in object_list %}
+                <tr>
+                    <th >{{producto.ClaveInterna}}</th>
+                    <th >{{producto.Descripcion}}</th>
+                    <th >{{producto.Unidad}}</th>
+                    <th >{{producto.ValorUnitario}}</th>
+                    <td><a href="{% url 'items_update' producto.id %}"><button class="btn btn-outline-primary">Editar</button></a></td>
+                    <td><button id="delete-btn" class="btn btn-danger not-visible" @click="get_clave({{producto.id}}, '{{ producto.ClaveInterna}}')" data-bs-toggle="modal" data-bs-target="#deleteModal">delete</button></td>
+                </tr>           
+            {% endfor %}        
+        </tbody>
+    </table>
+
+<!--modal delete -->
+<div class="modal fade" id="deleteModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Delete Cliente</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete Product:  <b>[[ nombre ]]</b> ?
+            </div>
+            <div class="modal-footer">
+                <form id="delete-form" :action="[[ id ]]" method="POST">
+                    {% csrf_token %}
+                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit"  class="btn btn-success">delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</div>
+{% endblock content %}
+
+{% block scripts %}
+<script>
+    Vue.createApp({
+        el:'#app',
+        delimiters:['[[',']]'],
+        data(){
+            return {
+                nombre: '',
+                id:'',
+            }
+        },
+        methods: {
+            async get_clave(id, nombre){
+                this.nombre = nombre
+
+                this.id = `/Clientes/${id}/delete/`
+                console.log(this.id, this.nombre)
+            }
+        }
+    }).mount('#app')
+</script>
+{% endblock scripts %}

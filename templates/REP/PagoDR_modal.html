@@ -1,0 +1,32 @@
+<div class="modal fade bd-example-modal-lg" id="drModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Documentos Relacionados</h5>
+                <button @click=hasRemo() type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <table class="table ">
+                    <thead class="thead-dark ">            
+                        <tr>
+                            <th scope="col">UUID</th>
+                            <th scope="col">Folio</th>
+                            <th scope="col">Serie</th>
+                        </tr>
+                    </thead>
+                    <tbody style="cursor: pointer;">                                
+                        <tr @click="cl($event, ING)" :id="ING.UUID" class="item-row" v-for="ING in IngresoS" >  
+                            <th scope="row" >[[ ING.UUID ]]</th>
+                            <td>[[ ING.Folio ]]</td>  
+                            <td>[[ ING.Serie ]]</td>                          
+                        </tr>                    
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">           
+                <button @click=hasRemo() id="closeList" type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                <a @click="selectrow()" class="btn btn-success">Seleccionar</a>            
+            </div>
+        </div>
+    </div>
+</div>

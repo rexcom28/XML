@@ -1,0 +1,75 @@
+<div class="card border-dark mb-3">
+    <div class="card-header">
+        <h2>Pagos</h2>       
+    </div> 
+    <div class="row p-2">
+        <div class="col">
+            <a class="btn btn-primary float-right" href="{% url 'Pagos_create' id %}">Crear Pago</a>
+        </div>
+    </div>
+    <div class="row p-2">
+        <div class="col">
+            <table class="table">
+                <thead class="thead-dark p-6">        
+                    <tr>
+                        <th scope="col">Fecha de Pago</th>
+                        <th scope="col">Forma Pago</th>
+                        <th scope="col">Moneda </th>
+                        <th scope="col">Monto</th>
+                        <th scope="col">actions</th>   
+                    </tr>
+                </thead>
+                <tbody>                                                                                                                 
+                    {% for pago in qs %}
+                        <tr>  
+                            <th scope="row">{{pago.FechaPago}}</th>               
+                            <td>{{pago.FormaDePagoP}}</td>
+                            <td>{{pago.MonedaP}}</td>
+                            <td>{{pago.Monto}}</td>                                                        
+                            {% comment %}                                                                                                                                            
+                                {% for p in Impuestos %}
+                                    {% if p.Imp_Partida.id == ingreso.id %}
+                                        <div class=" border-top border-bottom">
+                                            
+                                            {% if p.Impuesto == '002' and p.Tipo_T_R == 'TRASLADO' %}
+                                                <strong>IVA: $</strong>
+                                            {% elif p.Impuesto == '002' and p.Tipo_T_R == 'RETENCION' %}
+                                                <strong>IVA Ret.: $</strong>
+                                            {% elif p.Impuesto == '001' %}
+                                                <strong>ISR: $</strong>
+                                            
+                                            {% endif %}
+                                                {{p.Importe}}
+                                            
+                                        </div>                                
+                                    {% endif %}
+                                {% empty %}
+                                    <strong>Sin impuestos declarados</strong>
+                                {% endfor %}
+                            {% endcomment %}        
+                        
+                            <td><a href="{% url 'Pagos_update' pago.id %}" class="btn btn-outline-primary">Update</a>
+                                <!-- Example single danger button -->
+                                <div class="btn-group">
+                                    <a class="btn btn-danger dropdown-toggle" id="btnaction-{{pago.id}}" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                    Action
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="btnaction-{{pago.id}}">
+                                    <a class="dropdown-item" href="{% url 'PagosAddDR_create' pago.id %}">Agregar Documento Relacionado</a>
+                                    <a class="dropdown-item" href="#">Another action</a>
+                                    <a class="dropdown-item" href="#">Something else here</a>
+                                    <div class="dropdown-divider"></div>
+                                    <a class="dropdown-item" href="#">Separated link</a>
+                                    </div>
+                                </div>
+                            </td>
+                            
+                        </tr>            
+                    {% endfor %}        
+                    
+                </tbody>
+            </table>
+            
+        </div>
+    </div>
+</div>
