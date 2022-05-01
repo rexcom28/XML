@@ -4,7 +4,7 @@ from pydoc import visiblename
 
 from . models import *
 from django.db import models
-from CatSat.models import c_FormaPago, c_TipoRelacion, c_UsoCFDI, c_RegimenFiscal, c_Pais
+#from CatSat.models import c_FormaPago, c_TipoRelacion, c_UsoCFDI, c_RegimenFiscal, c_Pais
 
 class Comprobante(models.Model):
     def c_Uso():
@@ -49,7 +49,7 @@ class Comprobante(models.Model):
     )
 
     def c_FormaPagoF():
-        return [(FP.FormaPago, FP.FormaPago+'-'+FP.Descripcion) for FP in c_FormaPago.objects.all()]
+        pass #return [(FP.FormaPago, FP.FormaPago+'-'+FP.Descripcion) for FP in c_FormaPago.objects.all()]
     Version = models.CharField(max_length=5, default='4.0')
     Serie   = models.CharField(blank=True, max_length=25)
     Folio   = models.CharField(blank=True, max_length=40 )
