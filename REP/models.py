@@ -1,6 +1,6 @@
 
 from django.db import models
-#from CatSat.models import c_FormaPago
+from CatSat.models import c_FormaPago
 from Comp.models_Abst import Impuesto,Comprobante,Emisor, Receptor
 
 from django.core.validators import MinLengthValidator
