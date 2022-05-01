@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-1toeofwsz8wdj#n8e(@gkuip7@s)0k)hsqt(0f%61fshl2lf9-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['readerxml.herokuapp.com', 'localhost']
 
