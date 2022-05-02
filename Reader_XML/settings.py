@@ -13,7 +13,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-1toeofwsz8wdj#n8e(@gkuip7@s)0k)hsqt(0f%61fshl2lf9-'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -167,9 +167,11 @@ if DEBUG:
     STATICFILES_DIRS = [
         BASE_DIR / 'static'
     ]
+    
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / 'media'
-    #STATIC_URL = '/static/'
+    STATIC_URL = '/static/'
+    
 else:
     # AWS S3 SETTINGS
     AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
@@ -185,6 +187,7 @@ else:
         #BASE_DIR / 'posts' / 'static',
         #BASE_DIR / 'profiles' / 'static',
     ]
+    
     STATICFILES_STORAGE = 'Reader_XML.storages.StaticStore'#'storages.backends.s3boto3.S3Boto3Storage'
     DEFAULT_FILE_STORAGE = 'Reader_XML.storages.MediaStore'
     STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
