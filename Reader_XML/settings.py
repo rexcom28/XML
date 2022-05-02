@@ -37,7 +37,8 @@ INSTALLED_APPS = [
     'crispy_forms',
     'widget_tweaks',
     'import_export',
-    #'django.contrib.sites',
+    'storages',
+    
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
