@@ -155,9 +155,9 @@ EMAIL_TIMEOUT = 5
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
-EMAIL_HOST_USER = DEFAULT_FROM_EMAIL = 'pacu280349@gmail.com'
-EMAIL_HOST_PASSWORD = 'ljdcfbdysiiexqby'
-EMAIL_SUBJECT_PREFIX = 'AllAuth Tutorial'
+EMAIL_HOST_USER = DEFAULT_FROM_EMAIL = os.environ.get('A_EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.environ.get('A_EMAIL_HOST_PASSWORD')
+EMAIL_SUBJECT_PREFIX = 'XML Reader App'
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 ACCOUNT_SIGNUP_REDIRECT_URL =LOGIN_REDIRECT_URL
 ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = True
@@ -168,11 +168,25 @@ if DEBUG:
     ]
     MEDIA_URL = '/media/'
     MEDIA_ROOT = BASE_DIR / 'media'
-    STATIC_URL = '/static/'
+    #STATIC_URL = '/static/'
 else:
-    STATIC_URL = '/static/'
-    SATIC_ROOT = BASE_DIR/'static'    
+    # AWS S3 SETTINGS
+    AWS_ACCESS_KEY_ID = os.environ.get('AWS_ACCESS_KEY_ID')
+    AWS_SECRET_ACCESS_KEY = os.environ.get('AWS_SECRET_ACCESS_KEY')    
+    AWS_STORAGE_BUCKET_NAME = os.environ.get('AWS_STORAGE_BUCKET_NAME')
+    AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+    AWS_S3_OBJECT_PARAMETERS = {'CacheControl': 'max-age=86400'}
+    AWS_DEFAULT_ACL = 'public-read'
 
+    AWS_LOCATION = 'static'
+    STATICFILES_DIRS = [
+        BASE_DIR / 'static',
+        #BASE_DIR / 'posts' / 'static',
+        #BASE_DIR / 'profiles' / 'static',
+    ]
+    STATICFILES_STORAGE = 'Reader_XML.storages.StaticStore'#'storages.backends.s3boto3.S3Boto3Storage'
+    DEFAULT_FILE_STORAGE = 'Reader_XML.storages.MediaStore'
+    STATIC_URL = 'https://%s/%s/' % (AWS_S3_CUSTOM_DOMAIN, AWS_LOCATION)
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.0/ref/settings/#default-auto-field
 
