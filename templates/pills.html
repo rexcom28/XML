@@ -368,7 +368,21 @@
                 })
                 .then((data)=>{
                     
-                    return this.c_ClienteS = data["Clientes"]
+                    this.c_ClienteS = data["Clientes"]
+                    let el = Object.values(data["Clientes"]).find((RFC)=>{
+                        return RFC.RFC===event.target.value
+                    }) 
+                    if(el.RFC.length > 0 ){
+                        console.log('ONTOy ',this.Nombre_Rec, el)
+                        id_RegimenFiscal_Rec.value  =el.Regimen
+                        id_Nombre_Rec.value         = el.Nombre                            
+                        id_DomicilioFiscal_Rec.value= el.Domicilio
+                        id_ResidenciaFiscal_Rec.value = el.Recidencia
+                        id_NumRegIdTrib_Rec.value    = el.Tax_id
+                        id_UsoCFDI_Rec.value    = el.Uso_CFDI
+                    }else{
+                        return alert('No valido RFC o cliente')
+                    }
                 })
 
             },
@@ -380,8 +394,8 @@
                     return res.json()
                 })
                 .then((data)=>{
-                    //console.log(data["Productos"])
-                    return this.c_ProductoS = data["Productos"]
+                    //console.log(data["Productos"])                    
+                    this.c_ProductoS = data["Productos"]                                        
                 })
             },
             async fillProd(event){
