@@ -8,7 +8,7 @@ class c_FormaPago(models.Model):
         return self.FormaPago+'-'+self.Descripcion
 class c_Moneda(models.Model):
     Moneda  = models.CharField(max_length=3, null=False,blank=False)
-    Descripcion = models.CharField(max_length=35, null=False,blank=False)
+    Descripcion = models.CharField(max_length=100, null=False,blank=False)
     def __str__(self):
         return self.Moneda+'-'+self.Descripcion
 class c_CodigoPostal(models.Model):
