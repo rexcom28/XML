@@ -15,7 +15,7 @@ from django.urls import reverse_lazy
 
 class c_ClientesView(View):
     def get(self, request,**kwargs):
-        RFC = request.GET.get('RFC', '')
+        RFC = request.GET.get('RFC', '').upper()
         
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             Clientes = list(Cliente.objects.values().filter(RFC__startswith=str(RFC)))        
