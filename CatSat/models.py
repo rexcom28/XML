@@ -20,7 +20,7 @@ class c_CodigoPostal(models.Model):
         return self.CodigoPostal+'-'+self.Estado_c
 class c_RegimenFiscal(models.Model):
     Regimen =models.CharField(max_length=3, null=False,blank=False)
-    Descripcion = models.CharField(max_length=100, null=False,blank=False)
+    Descripcion = models.CharField(max_length=101, null=False,blank=False)
     Fisica  = models.BooleanField(null=True,blank=True)
     Moral   = models.BooleanField(null=True,blank=True)
     def __str__(self):
