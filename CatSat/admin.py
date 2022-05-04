@@ -44,12 +44,12 @@ class c_CodigoPostalAdmin(ImportMixin, admin.ModelAdmin):
 class c_RegimenFiscal_CSV(resources.ModelResource):
     class Meta:
         model = c_RegimenFiscal
-        fields = ['id', 'Regimen', 'Descripcion']
+        fields = ['id', 'Regimen', 'Descripcion','Fisica','Moral']
 
 @admin.register(c_RegimenFiscal)
 class c_RegimenFiscalAdmin(ImportMixin, admin.ModelAdmin):
     class Meta:
-        list_display = ['id', 'Regimen', 'Descripcion']
+        list_display = ['id', 'Regimen', 'Descripcion','Fisica','Moral']
         resources_class = c_RegimenFiscal_CSV
 #------------------------------------------------
 
