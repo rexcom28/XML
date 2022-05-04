@@ -359,8 +359,8 @@
             },
             async get_c_Clientes(event, bool){
                 let response
-                //console.log('event.target',event.target.value)                
-                response = await this.sendRequest(`http://127.0.0.1:8000/Clientes/c_ClientesView/?RFC=${event.target.value}`,'get')
+                console.log('event.target',event.target.value)                
+                response = await this.sendRequest(`/Clientes/c_ClientesView/?RFC=${event.target.value}`,'get')
                 let resolve = Promise.resolve(response)
                 resolve.then((res)=>{
                     return res.json()
