@@ -45,7 +45,7 @@ class  c_ClaveProdServ(models.Model):
 class c_ClaveUnidad(models.Model):
     ClaveUnidad = models.CharField(max_length=5, null=False,blank=False)
     Nombre      = models.CharField(max_length=150, null=False,blank=False)
-    Descripcion = models.CharField(max_length=250, null=False,blank=False)
+    Descripcion = models.CharField(max_length=1000, null=False,blank=False)
     def __str__(self):
         return self.ClaveUnidad+'-'+self.Nombre+'-'+self.Descripcion
 class c_Aduana(models.Model):
