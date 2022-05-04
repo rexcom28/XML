@@ -66,7 +66,7 @@ class c_Colonia(models.Model):
 class c_Estado(models.Model):
     Estado  = models.CharField(max_length=4, null=False,blank=False)
     Pais_c  = models.CharField(max_length=3, null=True,blank=True)
-    Nombre_estado =   models.CharField(max_length=25, null=True,blank=True)
+    Nombre_estado =   models.CharField(max_length=100, null=True,blank=True)
     def __str__(self):
         return self.Estado+'-'+self.Nombre_estado
 class c_Localidad(models.Model):
