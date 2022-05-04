@@ -34,7 +34,7 @@ class c_Pais(models.Model):
 
 class c_UsoCFDI(models.Model):
     Uso = models.CharField(max_length=4, null=False,blank=False)
-    Descripcion = models.CharField(max_length=65, null=False,blank=False)
+    Descripcion = models.CharField(max_length=150, null=False,blank=False)
     def __str__(self):
         return self.Uso+'-'+self.Descripcion
 class  c_ClaveProdServ(models.Model):
