@@ -359,8 +359,8 @@
             },
             async get_c_Clientes(event, bool){
                 let response
-                
-                console.log('event.target',event.target.value)                
+                let el
+                //console.log('event.target',event.target.value)                
                 response = await this.sendRequest(`/Clientes/c_ClientesView/?RFC=${event.target.value}`,'get')
                 let resolve = Promise.resolve(response)
                 resolve.then((res)=>{
@@ -369,10 +369,11 @@
                 .then((data)=>{
                     
                     this.c_ClienteS = data["Clientes"]
-                    let el = Object.values(data["Clientes"]).find((RFC)=>{
+                    el = Object.values(data["Clientes"]).find((RFC)=>{
                         return RFC.RFC===event.target.value
-                    }) 
-                    if(el.RFC.length > 0 ){
+                    })
+                    console.log(el) 
+                    if(el !=undefined ){
                         console.log('ONTOy ',this.Nombre_Rec, el)
                         id_RegimenFiscal_Rec.value  =el.Regimen
                         id_Nombre_Rec.value         = el.Nombre                            
@@ -380,8 +381,6 @@
                         id_ResidenciaFiscal_Rec.value = el.Recidencia
                         id_NumRegIdTrib_Rec.value    = el.Tax_id
                         id_UsoCFDI_Rec.value    = el.Uso_CFDI
-                    }else{
-                        return alert('No valido RFC o cliente')
                     }
                 })
 
