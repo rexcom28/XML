@@ -10,7 +10,7 @@ from django.forms import BaseInlineFormSet, ValidationError, inlineformset_facto
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Submit
 
-#from CatSat.models import c_ClaveProdServ
+from CatSat.models import c_ClaveProdServ
 
 class ParteForm(forms.ModelForm):
 
