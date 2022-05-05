@@ -2,14 +2,14 @@ import imp
 from pyexpat import model
 from statistics import mode
 from django.db import models
-#from CatSat.models import c_Pais,c_RegimenFiscal
+from CatSat.models import c_Pais,c_RegimenFiscal
 
 
 class Cliente(models.Model):
     def c_paisC():
-        pass#return [(res.Pais, res.Pais+' - '+res.Descripcion) for res in c_Pais.objects.all()]
+        return [(res.Pais, res.Pais+' - '+res.Descripcion) for res in c_Pais.objects.all()]
     def c_RegimenC():
-        pass #return [(reg.Regimen, reg.Regimen+' - '+reg.Descripcion) for reg in c_RegimenFiscal.objects.all()]
+        return [(reg.Regimen, reg.Regimen+' - '+reg.Descripcion) for reg in c_RegimenFiscal.objects.all()]
     
     clave   = models.CharField(max_length=8, unique=True)
     RFC     = models.CharField(max_length=13, unique=True)
@@ -26,9 +26,9 @@ class Cliente(models.Model):
 
 class Configuracion(models.Model):
     def c_paisC():
-        pass #return [(res.Pais, res.Pais+' - '+res.Descripcion) for res in c_Pais.objects.all()]
+        return [(res.Pais, res.Pais+' - '+res.Descripcion) for res in c_Pais.objects.all()]
     def c_RegimenC():
-        pass #return [(reg.Regimen, reg.Regimen+' - '+reg.Descripcion) for reg in c_RegimenFiscal.objects.all()]
+        return [(reg.Regimen, reg.Regimen+' - '+reg.Descripcion) for reg in c_RegimenFiscal.objects.all()]
 
     clave   = models.CharField(max_length=8, unique=True)
     RFC     = models.CharField(max_length=13, unique=True)
