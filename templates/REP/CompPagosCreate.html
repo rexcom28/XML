@@ -190,6 +190,17 @@
                                 <div class="card-header">
                                     <h5 style="text-align: center;"><strong>Documento Relacionado:</strong></h5>
                                 </div>
+                                <div class="col">
+                                    <label for="{{form.IdDocumento.id_for_label }}"><strong>Documento Relacionado:</strong></label>
+                                    <div class="input-group mb-3">                        
+                                        {% render_field form.IdDocumento autocomplete="off" placeholder=form.IdDocumento.label class+="form-control"   type="text" %}
+                                        <div class="input-group-append">                            
+                                            <button @click="loadDR()" data-bs-toggle="modal" data-bs-target="#drModal" class="btn btn-outline-secondary" type="button">Lista DR</button>
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                {% include "REP/PagoDR_modal.html" %}
                             </div>
                         </div>
 

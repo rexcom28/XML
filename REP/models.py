@@ -1,7 +1,13 @@
 
 from django.db import models
 from CatSat.models import c_FormaPago
-from Comp.models_Abst import Impuesto,Comprobante,Emisor, Receptor
+from Comp.models_Abst import (
+    Impuesto,
+    Comprobante,
+    Emisor,
+    Receptor,
+    CFDI_Relacionados_Base,
+)
 
 from django.core.validators import MinLengthValidator
 
@@ -24,6 +30,12 @@ class ComprobantePagos(Comprobante,Emisor,Receptor):
     UsoCFDI_Rec         = models.CharField(max_length=4, default='CP01', choices=Comprobante.c_Uso(),null=True,blank=True)
     def __str__(self):
         return f'Pago: {self.Folio}'
+
+class CfdiRelacionados_REP(CFDI_Relacionados_Base):
+    CFDI_Rel        = models.ForeignKey(ComprobantePagos, related_name='CFDI_REL_REP', on_delete=models.CASCADE)
+    def __str__(self):
+        return f'Numero REP: {self.CFDI_Rel.NumPago}, UUID: {self.UUID}'
+
 class Pagos(models.Model):
     def c_FormaPagoF():
         return [(FP.FormaPago, FP.FormaPago+'-'+FP.Descripcion) for FP in c_FormaPago.objects.all()]
