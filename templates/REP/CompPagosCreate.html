@@ -43,7 +43,7 @@
                         <!--Receptor/Emisor-->
                         <li class="nav-item" role="presentation">
                             <button class="nav-link" id="pills-receptor-tab" data-bs-toggle="pill" data-bs-target="#pills-receptor" type="button" role="tab" aria-controls="pills-receptor" aria-selected="false">
-                                Tab 4
+                                Docuemento Relacionado
                             </button>
                         </li>
                         <!--END Receptor/Emisor-->
@@ -102,7 +102,12 @@
                                 <div class="row">
                                     <div class="col">
                                         <label for="{{form.Rfc_Rec.id_for_label }}"><strong>RFC:</strong></label>
-                                        {% render_field form.Rfc_Rec placeholder=form.Rfc_Rec.label class+="form-control"  type="text" %}
+                                        {% render_field form.Rfc_Rec placeholder=form.Rfc_Rec.label autocomplete="off" aria-label="id_Rfc_Rec" list="RfcRec" @keyup="get_c_Clientes($event, false)" class+="form-control" type="text" %}
+                                        <datalist  id="RfcRec">
+                                            <option autocomplete="off" v-for="c_Cliente in c_ClienteS" v-bind:value="c_Cliente.RFC">
+                                                [[ c_Cliente.RFC ]]-[[ c_Cliente.Nombre ]]
+                                            </option>
+                                        </datalist>
                                     </div>
                                     <div class="col">
                                         <label for="{{form.UsoCFDI_Rec.id_for_label }}"><strong>USO:</strong></label>
@@ -181,7 +186,11 @@
                         <!--END CFDI-->
 
                         <div class="tab-pane fade" id="pills-receptor" role="tabpanel" aria-labelledby="pills-receptor-tab">
-                            {% block block_tab4 %}{% endblock block_tab4 %}
+                            <div class="card border-dark p-3">
+                                <div class="card-header">
+                                    <h5 style="text-align: center;"><strong>Documento Relacionado:</strong></h5>
+                                </div>
+                            </div>
                         </div>
 
                         <div class="tab-pane fade" id="pills-rela" role="tabpanel" aria-labelledby="pills-rela-tab">
@@ -232,14 +241,42 @@
         delimiters:['[[',']]'],
         data(){
             return{
-
+                c_ClienteS:[],
+                c_Cliente:{},
             }
         },
         mounted(){
 
         },
         methods: {
-            
+            async get_c_Clientes(event, bool){
+                let response
+                let el
+                //console.log('event.target',event.target.value)                
+                response = await sendRequest(`/Clientes/c_ClientesView/?RFC=${event.target.value}`,'get')
+                let resolve = Promise.resolve(response)
+                resolve.then((res)=>{
+                    return res.json()
+                })
+                .then((data)=>{
+                    
+                    this.c_ClienteS = data["Clientes"]
+                    el = Object.values(data["Clientes"]).find((RFC)=>{
+                        return RFC.RFC===event.target.value
+                    })
+                    console.log(el) 
+                    if(el !=undefined ){
+                        console.log('ONTOy ',this.Nombre_Rec, el)
+                        id_RegimenFiscal_Rec.value  =el.Regimen
+                        id_Nombre_Rec.value         = el.Nombre                            
+                        id_DomicilioFiscal_Rec.value= el.Domicilio
+                        id_ResidenciaFiscal_Rec.value = el.Recidencia
+                        id_NumRegIdTrib_Rec.value    = el.Tax_id
+                        
+                    }
+                })
+
+            },
         },
     })
     app.mount('#app')

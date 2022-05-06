@@ -170,7 +170,7 @@
         <br>
         <div class="row">
             <div class="col-2">            
-                {% render_field form.Rfc_Rec placeholder="RFC" autocomplete="off" aria-label="id_Rfc_Rec" list="RfcEmi" @keyup="get_c_Clientes($event, false)"  class+="form-control"  type="text" style="text-transform:uppercase" %}
+                {% render_field form.Rfc_Rec placeholder="RFC" autocomplete="off" aria-label="id_Rfc_Rec" list="RfcEmi" @keyup="get_c_Clientes($event, false)" class+="form-control" type="text" style="text-transform:uppercase" %}
                 <datalist  id="RfcEmi">
                     <option  v-for="c_Cliente in c_ClienteS" v-bind:value="c_Cliente.RFC">
                         [[ c_Cliente.RFC ]]-[[ c_Cliente.Nombre ]]
@@ -391,14 +391,16 @@ tabindex="-1" aria-labelledby="uuidsModalLabel" aria-hidden="true">
 <div class="card-body">
     {% if ingreso_inline_formset %}
         <h5 class="text-info">Add Conceptos</h5>
-
-        {{ ingreso_inline_formset.non_form_errors }}                  
-        {% for form in ingreso_inline_formset   %}             
-            {{ ingreso_inline_formset.management_form }}
-            {% include "Ingreso_C.html" %}        
-            <br>
-            <hr>            
-        {% endfor %}
+        <div class="card-body">
+            {{ ingreso_inline_formset.non_form_errors }}                  
+            {% for form in ingreso_inline_formset   %}             
+                {{ ingreso_inline_formset.management_form }}
+                {% include "Ingreso_C.html" %}        
+                <br>
+                <hr>            
+            {% endfor %}
+        </div>
+        
     {% else %}
       
         <div class="row">

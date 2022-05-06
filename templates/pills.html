@@ -6,101 +6,109 @@
 
 
 <div id="app" v-cloak>
-    
-    <br>
-    <form method="post">
-        {% csrf_token %}
-        
-        <div class="columns">
-            <div class="column is-8">
-                <ul class="nav nav-pills -mb-3" id="pills-tab" role="tablist">
-                    <!--GENERALES-->
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">                    
-                            {% block tab1 %}{% endblock tab1 %}
-                        </button>                            
-                    </li>
-                    <!--END GENERAL-->
+    <div class="card border-dark mb-3">
+        <div class="card-header">
+            <h2>Ingreso</h2>
+        </div>
+            
+        <br>
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="columns p-2">
+                <div class="column is-8">
+                    <ul class="nav nav-pills -mb-3" id="pills-tab" role="tablist">
+                        <!--GENERALES-->
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">                    
+                                {% block tab1 %}{% endblock tab1 %}
+                            </button>                            
+                        </li>
+                        <!--END GENERAL-->
 
-                    <!--TOTALES-->
-                    <li class="nav-item" role="presentation">                
-                        <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
-                            {% block tab2 %}{% endblock tab2 %}
-                        </button>
-                    </li>
-                    <!--END TOTALES-->
+                        <!--TOTALES-->
+                        <li class="nav-item" role="presentation">                
+                            <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" role="tab" aria-controls="pills-contact" aria-selected="false">
+                                {% block tab2 %}{% endblock tab2 %}
+                            </button>
+                        </li>
+                        <!--END TOTALES-->
 
-                    <!--CFDI-->
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
-                            {% block tab3 %}{% endblock tab3 %}
-                        </button>
-                    </li>
-                    <!--END CFDI-->
+                        <!--CFDI-->
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
+                                {% block tab3 %}{% endblock tab3 %}
+                            </button>
+                        </li>
+                        <!--END CFDI-->
 
-                    <!--Receptor/Emisor-->
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-receptor-tab" data-bs-toggle="pill" data-bs-target="#pills-receptor" type="button" role="tab" aria-controls="pills-receptor" aria-selected="false">
-                            {% block tab4 %}{% endblock tab4 %}
-                        </button>
-                    </li>
-                    <!--END Receptor/Emisor-->
+                        <!--Receptor/Emisor-->
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-receptor-tab" data-bs-toggle="pill" data-bs-target="#pills-receptor" type="button" role="tab" aria-controls="pills-receptor" aria-selected="false">
+                                {% block tab4 %}{% endblock tab4 %}
+                            </button>
+                        </li>
+                        <!--END Receptor/Emisor-->
 
-                    <!--Dcto Relacionados-->
-                    <li class="nav-item" role="presentation">
-                        <button class="nav-link" id="pills-rela-tab" data-bs-toggle="pill" data-bs-target="#pills-rela" type="button" role="tab" aria-controls="pills-rela" aria-selected="false">
-                            {% block tab5 %}{% endblock tab5 %}
-                        </button>
-                    </li>
-                    <!--END Dcto Relacionados-->
-                </ul>
-                <div class="tab-content" id="pills-tabContent">
-                    <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
-                        {% block block_tab1 %}{% endblock block_tab1 %}
-                    </div>
-                    <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
-                        {% block block_tab2 %}{% endblock block_tab2 %}
-                    </div>
-                    <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
-                        {% block block_tab3 %}{% endblock block_tab3 %}
-                    </div>
-                    <div class="tab-pane fade" id="pills-receptor" role="tabpanel" aria-labelledby="pills-receptor-tab">
-                        {% block block_tab4 %}{% endblock block_tab4 %}
-                    </div>
+                        <!--Dcto Relacionados-->
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="pills-rela-tab" data-bs-toggle="pill" data-bs-target="#pills-rela" type="button" role="tab" aria-controls="pills-rela" aria-selected="false">
+                                {% block tab5 %}{% endblock tab5 %}
+                            </button>
+                        </li>
+                        <!--END Dcto Relacionados-->
+                    </ul>
+                    <div class="tab-content" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+                            {% block block_tab1 %}{% endblock block_tab1 %}
+                        </div>
+                        <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">
+                            {% block block_tab2 %}{% endblock block_tab2 %}
+                        </div>
+                        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+                            {% block block_tab3 %}{% endblock block_tab3 %}
+                        </div>
+                        <div class="tab-pane fade" id="pills-receptor" role="tabpanel" aria-labelledby="pills-receptor-tab">
+                            {% block block_tab4 %}{% endblock block_tab4 %}
+                        </div>
 
-                    <div class="tab-pane fade" id="pills-rela" role="tabpanel" aria-labelledby="pills-rela-tab">
-                        {% block block_tab5 %}{% endblock block_tab5 %}
+                        <div class="tab-pane fade" id="pills-rela" role="tabpanel" aria-labelledby="pills-rela-tab">
+                            {% block block_tab5 %}{% endblock block_tab5 %}
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
-        <br>
-        
-        {% if form.errors %}
-
-            {% for field in form %}
-                
-                {% for error in field.errors %} 
-                {{field.name}}
-                    <div class="alert alert-danger">
-                        <strong>{{ error|escape }}</strong>
-                    </div>
-                {% endfor %}
-            {% endfor %}
-        {% endif %}
-        <hr>
-        
-        {% block Inline_formM %}
-        {% endblock Inline_formM %}    
-        <div class="mt-3 mb-5">
-            <button type="submit" class="px-5 btn btn-success">Guardar Comprobante</button>
-        </div>
-        {{ form.non_form_errors }}
-        
-        
-        
+            <br>
             
-    </form>
+            {% if form.errors %}
+
+                {% for field in form %}
+                    
+                    {% for error in field.errors %} 
+                    {{field.name}}
+                        <div class="alert alert-danger">
+                            <strong>{{ error|escape }}</strong>
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+            {% endif %}
+            
+
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h2>Conceptos Ingreso</h2>
+                </div>
+                {% block Inline_formM %}
+                
+                
+                {% endblock Inline_formM %}    
+            </div>
+            <div class="mt-3 mb-5 p-2">
+                <button type="submit" class="px-5 btn btn-success">Guardar Comprobante</button>
+            </div>
+            {{ form.non_form_errors }}                
+        </form>
+    </div>
 </div>
 
 {% endblock content %}
@@ -159,7 +167,7 @@
         },
         mounted() {  
             this.CFDI_Rel_id='{{ form.Ingreso.value }}'
-            console.log('ssssssssssssssss',this.CFDI_Rel_id)
+            
             this.created() 
                    
         },
