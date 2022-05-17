@@ -61,7 +61,7 @@
             <div class="row p-3">
                 <div class="col">
                     <label for="{{form.ImpSaldoAnt.id_for_label }}"><strong>Saldo Anterior:</strong></label>
-                    {% render_field form.ImpSaldoAnt   placeholder=form.ImpSaldoAnt.label class+="form-control"   min=0 type="number" %}
+                    {% render_field form.ImpSaldoAnt|append_attr:"readonly:readonly"   placeholder=form.ImpSaldoAnt.label class+="form-control"   min=0 type="number" %}
                 </div>
                 
                 <div class="col">
@@ -90,13 +90,27 @@
             </div>
             
         </div>
+        {% if form.errors %}
+
+            {% for field in form %}
+                
+                {% for error in field.errors %} 
+                {{field.name}}
+                    <div class="alert alert-danger">
+                        <strong>{{ error|escape }}</strong>
+                    </div>
+                {% endfor %}
+            {% endfor %}
+        {% endif %}
     </form>
-
+    
 <!--DR modal-->
-{% include "REP/PagoDR_modal.html" %}
-
+{% include "REP/PagoDR_List_modal.html" %}
 
 </div>
+
+
+
 {% endblock content %}
 
 {% block scripts %}
@@ -110,6 +124,7 @@
                    IngresoS:[],
                    SelectedRow:[],
                    saldo:[],
+                   Pago:{},
                 }
             },
             mounted() {
@@ -117,7 +132,19 @@
             },
             methods: {
                 calculaPago(e){
+                    
                     id_ImpSaldoInsoluto.value = id_ImpSaldoAnt.value - id_ImpPagado.value
+                    if (this.pago.MonedaP==="MXN" && id_MonedaDR.value==="USD")
+                    {
+                        equi = (this.pago.Monto / this.pago.TipoCambioP) / this.pago.Monto
+                        id_EquivalenciaDR.value = parseFloat(equi).toFixed(6)
+                    }else if (this.pago.MonedaP==="USD" && id_MonedaDR.value==="MXN")
+                    {
+                        id_EquivalenciaDR.value = parseFloat(this.pago.TipoCambioP).toFixed(6)
+                    }else{
+                        id_EquivalenciaDR.value = parseFloat(1).toFixed(6)
+                    }
+                    // 
                 },
                 hasRemo(){
                     
@@ -131,11 +158,12 @@
                 },
                 async selectrow(){
                     
-                    //console.log('this.SelectedRow ', this.SelectedRow )
+                    
                     if (this.SelectedRow.length == 0){
                         return alert('No seleccionado')
                     }
                     const pago = '{{form.Pago_rel.value}}'
+                    console.log('this.SelectedRow',this.SelectedRow)
                     id_Folio.value      = this.SelectedRow.Folio
                     id_Serie.value      = this.SelectedRow.Serie
                     id_MonedaDR.value   = this.SelectedRow.Moneda
@@ -158,8 +186,9 @@
                         }else{
                             id_NumParcialidad.value = data['res'].NumParcialidad
                             if(Object.entries(this.saldo).length > 1){
-                                id_ImpSaldoAnt.value = data['res'].ImpSaldoAnt
-                                id_ImpSaldoInsoluto.value = data['res'].ImpSaldoInsoluto
+                                id_ImpSaldoAnt.value = parseFloat(data['res'].ImpSaldoAnt).toFixed(6)
+                                id_ImpSaldoInsoluto.value =  parseFloat(data['res'].ImpSaldoInsoluto).toFixed(6)
+                                return this.pago = data['res'].pago
                             }
                         }
                         
@@ -206,7 +235,7 @@
                             return res.json()
                         })
                         .then((data)=>{
-                            //console.log(data)
+                            console.log('ayayaya',data)
                             this.IngresoS=data["res"]
                         })
                     }          

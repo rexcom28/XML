@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<br>
+<br>
+<div class="d-flex justify-content-center">
+    <form method="post">
+        {% csrf_token %}
+        <p>Seguro quieres borrar el pago relacionado<b>{{object}}</b> ?</p>
+        <input type="submit" class="btn btn-success" value="Confirmar">
+        <a href="{% url 'Pagos_update' object.Pago_rel %}" class="btn btn-danger">Cancelar</a>
+    </form>
+</div>
+
+
+{% endblock content %}

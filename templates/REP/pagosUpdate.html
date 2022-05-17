@@ -95,10 +95,10 @@
             <thead class="thead-dark">        
                 <tr>
                     <th scope="col">UUID</th>
-                    <th scope="col">Folio</th>
-                    <th scope="col">Moneda</th>
+                    <th scope="col">Folio</th>                    
                     <th scope="col">Parcialidad</th>
                     <th scope="col">Importe Pagado</th>
+                    
                     <th scope="col">Saldo Insoluto</th>
                     <th scope="col">Saldo Anterior</th>
                     <th></th>
@@ -108,16 +108,20 @@
                 {% for dr in DRs %}
                     <tr id="{{dr.id}}">
                         <td>{{dr.IdDocumento}}</td>
-                        <td>{{dr.Folio}}</td>
-                        <td>{{dr.MonedaDR}}</td>
+                        <td>{{dr.Folio}}</td>                        
                         <td>{{dr.NumParcialidad}}</td>
-                        <td class="ImportePagado">{{dr.ImpPagado}}</td>
+                        <td class="ImportePagado">{{dr.ImpPagado}} {{dr.MonedaDR}} </td>
+                        
                         <td>{{dr.ImpSaldoInsoluto}}</td>
                         <td>{{dr.ImpSaldoAnt}}</td> 
                         <td><a @click="dr({{dr.id}})" href="#{{dr.id}}" data-bs-toggle="modal" data-bs-target="#drUpdateModal{{dr.id}}" class="btn btn-outline-primary">Update</a></td>
+                        <td><a  data-bs-toggle="modal" data-bs-target="#deleteModal{{dr.id}}" class="btn btn-outline-danger p-2">Borrar</a></td>
                         <td>
                             {% include "REP/pagoDR_updateModal.html" %}
+                            {% include "REP/doctoRelacionado_DeleteModal.html" %}
                         </td>
+
+                        
                     </tr>
                 {% endfor %}
             </tbody>
@@ -136,7 +140,7 @@
         delimiters:['[[',']]'],
         data(){
             return{
-
+                idDelete: ''
             }
         },
         mounted(){
@@ -147,20 +151,25 @@
                 alert("Guarde el Pago antes de agregar  DR")
             },
             async check(e){
+                
                 const impPag = document.querySelectorAll('td.ImportePagado')                            
                 const crea = "createPago" == window.location.pathname.split('/').find((el) => el =="createPago") ? true : false
-                let suma = 0
-
-                //console.log(id_Monto.value)
+                let suma = 0                                
                 impPag.forEach((ele)=>{
-                    suma += parseFloat(ele.innerText)
-                    //console.log(parseFloat(ele.innerText))
+                    let innele = ele.innerText.split(" ")
+                    //console.log(innele)
+                    if(id_MonedaP.value==="MXN"){
+                        suma += innele[1]==="USD" ? parseFloat(innele[0] * id_TipoCambioP.value) : parseFloat(innele[0])
+                    }else{
+                        suma += innele[1]==="MXN" ? parseFloat(innele[0] / id_TipoCambioP.value) : parseFloat(innele[0])
+                    }
+                    //suma += parseFloat(ele.innerText)                                        
                 })
-                //console.log(suma)                
-                //console.log('crea ',crea)
+                console.log('suma ',suma)                
+                console.log('crea ',crea)
                 if (!crea){
-                    if (suma ==0 || suma < id_Monto.value ){
-                        alert('la suma de los DR es menor al monto del Pago. \n\r Favor agrega al menos un documento relacionado')
+                    if (suma ==0 || suma != id_Monto.value ){
+                        alert(`La suma de los DR $${parseFloat(suma).toFixed(6)} no es igual al monto del Pago $${parseFloat(id_Monto.value).toFixed(6)}. \n\rFavor agrega al menos un documento relacionado y/o reducir el monto total del pago \n\ro reducir el importe pagado de los documentos relacionados`)
                         e.preventDefault()
                         return
                     }

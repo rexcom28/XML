@@ -33,7 +33,7 @@
                         <td>{{Pago.Estado_CFDI}}</td>
                         <td>
                             <div class="btn-group p-2">
-                                <a href="{% url 'compPagos_update' Pago.id %}"><button class="btn btn-outline-primary p-2">Editar</button></a>                    
+                                <a href="{% url 'compPagos_update' Pago.id %}"><button class="btn btn-outline-primary p-2">Editar</button></a>
                                 <button id="delete-btn" class="btn btn-outline-danger p-2" @click="get_id({{Pago.id}},'{{Pago.Folio}}')" data-bs-toggle="modal" data-bs-target="#deleteModal">delete</button>
                                 
                                 <!-- Example single danger button -->                        

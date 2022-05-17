@@ -6,4 +6,5 @@ admin.site.register(DoctoRelacionado_Pagos)
 admin.site.register(ImpuestoDR_Pagos)
 admin.site.register(ImpuestoPago)
 admin.site.register(ComprobantePagos)
+admin.site.register(CfdiRelacionados_REP)
 

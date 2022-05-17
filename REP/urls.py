@@ -13,6 +13,8 @@ urlpatterns =[
     path('compPagos/updateDRPago/<pk>/', PagoUpdateDRUpdateView.as_view(), name='PagoDR_update'),    
     path('compPagos/seekdrPago/', PagosDR_ViewAPI.as_view(), name='PagosDR_api'),
     path('compPagos/checarSaldoPago/', Pagos_ChecarSaldo_ViewAPI.as_view(), name='PagosChecarSaldo_api'),
+    path('compPagos/addDR_Comp/', DoctoRelacion_CompPago.as_view(), name='PagoAddDR_Comp_api'),
+    path('compPagos/<pk>/deleteDR_Comp/', DoctoRelacion_CompPago_DeleteView.as_view(), name='delete_pago_dr'),
     
 
     

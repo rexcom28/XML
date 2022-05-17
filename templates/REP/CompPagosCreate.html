@@ -42,7 +42,7 @@
 
                         <!--Receptor/Emisor-->
                         <li class="nav-item" role="presentation">
-                            <button class="nav-link" id="pills-receptor-tab" data-bs-toggle="pill" data-bs-target="#pills-receptor" type="button" role="tab" aria-controls="pills-receptor" aria-selected="false">
+                            <button @click="lod(CFDI_Rel_id,$event)" class="nav-link" id="pills-receptor-tab" data-bs-toggle="pill" data-bs-target="#pills-receptor" type="button" role="tab" aria-controls="pills-receptor" aria-selected="false">
                                 Docuemento Relacionado
                             </button>
                         </li>
@@ -180,6 +180,10 @@
                                         <label for="{{form.Version.id_for_label }}"><strong>Versión:</strong></label>
                                         {% render_field form.Version|append_attr:"readonly:readonly" placeholder=form.Version.label class+="form-control"  type="text" %}
                                     </div>
+                                    <div class="col">
+                                        <label for="{{form.UUID.id_for_label }}"><strong>UUID:</strong></label>
+                                        {% render_field form.UUID|append_attr:"readonly:readonly" autocomplete="off" placeholder=form.UUID.label class+="form-control"   type="text" %}
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -191,16 +195,46 @@
                                     <h5 style="text-align: center;"><strong>Documento Relacionado:</strong></h5>
                                 </div>
                                 <div class="col">
-                                    <label for="{{form.IdDocumento.id_for_label }}"><strong>Documento Relacionado:</strong></label>
-                                    <div class="input-group mb-3">                        
-                                        {% render_field form.IdDocumento autocomplete="off" placeholder=form.IdDocumento.label class+="form-control"   type="text" %}
-                                        <div class="input-group-append">                            
-                                            <button @click="loadDR()" data-bs-toggle="modal" data-bs-target="#drModal" class="btn btn-outline-secondary" type="button">Lista DR</button>
-                                        </div>
-                                    </div>
                                     
+                                    <div class="">                        
+                                        
+                                        
+                                        <div class="col-2">        
+                                            <a  @click="checkDR" id="addDR" class="btn btn-primary" >Agregar Documento Relacionado</a>
+                                        </div>
+                                        <!--Modal add DR-->
+                                        {% include "REP/addDR_modal.html" %}
+
+                                        <!--Apartado para documentos relacionado pago-->
+                                        <div v-if="numDR >0">
+                                            <table class="table" >
+                                                <thead class="thead-dark">            
+                                                    <tr>
+                                                        <th scope="col">UUID</th>
+                                                        <th scope="col">Relacion</th>                
+                                                    </tr>
+                                                </thead>
+                                                <tbody>                                
+                                                    <tr class="item-row" v-for="(DR,i) in aTipoRelacionS" :key="i">  
+                                                        <th scope="row" >[[ DR.UUID ]]</th>
+                                                        <td>[[ DR.TipoRelacion ]]</td>  
+                                                        <td>
+                                                            <div class="btn-group">
+                                                                <a @click="LoadUUID(DR.id, DR.UUID, DR.TipoRelacion)" data-bs-toggle="modal" data-bs-target="#updateDRModal" class="btn btn-outline-primary">Editar</a>
+                                                                <a @click="BorraDR(DR.id)" id="delete-btn" class="btn btn-danger not-visible" >Borrar</a>
+                                                            </div>                        
+                                                        </td>                           
+                                                    </tr>                    
+                                                </tbody>
+                                            </table>
+                                            <!--END VUE TABLE-->
+                                        </div>
+                                        <div v-else>
+                                            <span><strong>No hay documentos relacionados </strong></span>                                            
+                                        </div>                                                                                
+                                    </div>                                    
                                 </div>
-                                {% include "REP/PagoDR_modal.html" %}
+                                {% include "REP/PagoDR_List_modal.html" %}
                             </div>
                         </div>
 
@@ -254,12 +288,168 @@
             return{
                 c_ClienteS:[],
                 c_Cliente:{},
+                Ingreso:{},
+                IngresoS:[],
+                aDocRel:{},
+                numDR: 0,
+                c_TipoRelS:[],
+                c_TipoRel:{},
+                CFDI_Rel_id:'',
+                TipoRel:'',
+                UUID: '',
+                SelectedRow:[],
+                aTipoRelacionS:[],
+                aTipoRelacion:{},
             }
         },
         mounted(){
-
+            this.created()
         },
+        
         methods: {
+            created(){
+                this.get_c_TipoRelacion()
+                this.CFDI_Rel_id = '{{id}}'
+                this.LoadDR_Comp(this.CFDI_Rel_id)
+            },
+            checkDR(){
+                if(this.numDR>0){
+                    return alert('El REP ya cuenta con documento relacionado, eliminelo para agregar uno nuevo')
+                }
+            },
+            dismissAddDR(){
+                this.UUID=""
+                this.SelectedRow=[]
+                this.IngresoS={}
+                this.TipoRel=''
+
+            },
+            hasRemo(){
+                const one = document.querySelector('.table')
+                    const rows = one.querySelectorAll("tr.item-row")
+                    rows.forEach((el)=>{
+                        this.IngresoS=''
+                        this.SelectedRow = []                        
+                        el.removeAttribute("style")
+                    })
+            },
+            selectrow(){
+                
+                if (this.SelectedRow.length == 0){
+                    return alert('No seleccionado')
+                }
+                this.UUID = this.SelectedRow.UUID
+                console.log('Row selected ',this.SelectedRow)
+                closeList.click()
+            },
+            cl(e,IN){
+                const r = document.getElementById(IN.UUID)
+                    const at = r.hasAttribute("style")
+                    const one = document.querySelector('.table')
+                    const rows = one.querySelectorAll("tr.item-row")
+                    this.SelectedRow = []
+                    rows.forEach((el)=>{
+                        //console.log(r.id== el.id)
+                        
+                        if(r.id == el.id && !at){
+                            el.setAttribute("style", "background-color: gray;")
+                            this.SelectedRow = IN
+
+                            return this.SelectedRow
+                        }else{
+                            el.removeAttribute("style")
+                            
+                        }
+                        
+                    })   
+                
+            },
+            async addDR(id,e){
+                
+                let response
+                let resolve
+                let data
+                if(this.UUID.length==0 || this.TipoRel.length==0){
+                    return alert('Necesita agregar los datos ')
+                }
+                console.log(this.UUID , this.TipoRel)
+                data = {
+                    'id':id,
+                    'UUID': this.UUID,
+                    'TR':this.TipoRel
+
+                }
+                response = await sendRequest('/compPagos/addDR_Comp/','post',data)
+                resolve = Promise.resolve(response)
+                resolve.then((res)=>{
+                    return res.json()
+                })
+                .then((data)=>{
+                    console.log('data res', data['res'])
+                    if(data['res']===true){
+                        addDR.removeAttribute('data-bs-toggle')
+                        addDR.removeAttribute('data-bs-target')
+                        this.UUID=""
+                        this.TipoRel=""
+                        this.LoadDR_Comp(this.CFDI_Rel_id)
+                    }
+                })
+            },
+            async lod(id, e){
+                
+                let response
+                let resolve
+                console.log('id',id, e)
+                if( ! id >0  ){
+                    btnload.setAttribute("disabled", "")
+                    id_UUID.setAttribute("disabled", "")
+                    
+                    return  alert('Primero Guarde el Pago para cargar los DR')
+                }else{
+                    if( ! this.numDR >0 ){
+                        addDR.setAttribute('data-bs-toggle', 'modal')
+                        addDR.setAttribute('data-bs-target',"#addDRModal")    
+                    }
+                }
+
+            },            
+            async loadDR(){
+                let id = '{{id}}'
+                let response
+                console.log(id.length)
+                if(id != 'None' || id.length >0 ){
+                    response = await sendRequest(`/compPagos/seekdrPago/?id=${id}&mod=true`, 'get')
+                    let resolve = Promise.resolve(response)
+                    resolve.then((res)=>{
+                        return res.json()
+                    })
+                    .then((data)=>{
+                        console.log('res',data['res'])
+                        this.IngresoS=data["res"]                        
+                    })
+                }
+            },
+            async LoadDR_Comp(id){
+                let response
+                let resolve
+                console.log(id)
+                if (id===''){
+                    return
+                }
+                response  = await sendRequest(`/compPagos/addDR_Comp/?id=${id}`,'get')
+                resolve = Promise.resolve(response)
+                resolve.then((res)=>{
+                    return res.json()
+                })
+                .then((data)=>{
+                    this.aTipoRelacionS = data["res"]
+                    this.numDR = this.aTipoRelacionS.length
+                })
+                .catch((err)=>{
+                    this.numDR = this.aTipoRelacionS.length
+                })
+                //this.aTipoRelacionS=
+            },
             async get_c_Clientes(event, bool){
                 let response
                 let el
@@ -286,6 +476,18 @@
                         
                     }
                 })
+
+            },
+            async get_c_TipoRelacion(){
+                let response = await sendRequest('/cats/c_TipoRelacionView/', 'get')
+                let resolve = Promise.resolve(response)
+                resolve.then((res)=>{
+                    return res.json()
+                })
+                .then((data)=>{
+                    return this.c_TipoRelS = data["TipoRel"]
+                })
+                
 
             },
         },

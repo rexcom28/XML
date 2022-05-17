@@ -1,4 +1,5 @@
 
+import json
 from django.http import HttpRequest, HttpResponse, JsonResponse
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -10,7 +11,7 @@ from django.views.generic import(
     DeleteView
 )
 from django.contrib.auth.mixins import LoginRequiredMixin
-from .models import ComprobantePagos, Pagos, DoctoRelacionado_Pagos
+from .models import ComprobantePagos, Pagos, DoctoRelacionado_Pagos, CfdiRelacionados_REP
 from Comp.models import Ingreso
 from Clientes.models import Configuracion
 from .forms import  CompPagosForm, PagosFormSet,PagoForm, PagoAddDRForm
@@ -146,7 +147,8 @@ class PagosAddDRCreateView(LoginRequiredMixin, CreateView):
         return reverse_lazy('Pagos_update', kwargs={'pk':self.kwargs['pk']})
     def get_context_data(self, **kwargs):
         context = super(PagosAddDRCreateView, self).get_context_data(**kwargs)
-        if self.request.method =='GET':            
+        if self.request.method =='GET':   
+            
             ini = {'Pago_rel':Pagos.objects.get(pk=self.kwargs['pk']) }
             context['form']= PagoAddDRForm(initial=ini)
         return context
@@ -167,11 +169,51 @@ class PagosDR_ViewAPI(View):
         res = {}
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             id_pago = request.GET.get('id','')
-            pago = Pagos.objects.get(id=id_pago)
-            #print(pago.CompPago.Rfc_Rec)
-            res = list(Ingreso.objects.values().filter(Rfc_Rec=pago.CompPago.Rfc_Rec))
+            mod = True if request.GET.get('mod','') == 'true' else False  
+            print(id_pago,'  mod',mod)
+            #when mod= True, seeks for UUID from CompPagos          
+            if mod:
+                res = list(ComprobantePagos.objects.values().exclude(id=id_pago))                
+            else:
+                pago = Pagos.objects.get(id=id_pago)                
+                res = list(Ingreso.objects.values().filter(Rfc_Rec=pago.CompPago.Rfc_Rec))
         return JsonResponse({'res':res}, safe=False, status=200)
 
+#lista Documento Relacionado del Comprobante Pago
+class DoctoRelacion_CompPago(View):
+    def get(self, request, *args, **kwargs):
+        res = {}
+        if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+            id = request.GET.get('id','')
+            res = list(CfdiRelacionados_REP.objects.values().filter(CFDI_Rel=id))
+        return JsonResponse({'res':res}, safe=False, status=200)
+    def post(self, request, *args, **kwargs):
+        
+        data = json.loads(request.body)
+        print('data', data)
+        try:
+            Pag = ComprobantePagos.objects.get(id=data['id'])
+            obj, created = CfdiRelacionados_REP.objects.get_or_create(
+                CFDI_Rel = Pag ,
+                TipoRelacion = data['TR'],
+                UUID = data['UUID']
+            )
+            if created:            
+                return JsonResponse({'res':True}, safe=False, status=200)  
+            else:                
+                return JsonResponse({'res':False}, safe=False, status=200)
+        except:
+            return JsonResponse({'res':False}, safe=False, status=200)
+
+class DoctoRelacion_CompPago_DeleteView(LoginRequiredMixin, DeleteView):
+    model = DoctoRelacionado_Pagos
+    
+    def get_success_url(self):
+        print(self.kwargs['pk'])
+
+        DR = DoctoRelacionado_Pagos.objects.get(pk=self.kwargs['pk'])
+        print('afffff ',DR.Pago_rel)
+        return reverse_lazy('Pagos_update', kwargs={'pk':DR.Pago_rel})
 
 class Pagos_ChecarSaldo_ViewAPI(View):
     def get(self, request, *args, **kwargs):
@@ -180,16 +222,19 @@ class Pagos_ChecarSaldo_ViewAPI(View):
             id_ingreso = request.GET.get('id', '')
             pagoid = request.GET.get('pago', '')
             
+            c = list(Pagos.objects.filter(pk=pagoid).values('MonedaP', 'Monto', 'TipoCambioP'))
+            print('Pago', c[0])
             #ExistPago = DoctoRelacionado_Pagos.objects.filter(Pago_rel=pagoid, IdDocumento=id_ingreso)
 
             #verifica que el DR no este en el pago que esta por darse de alta al seleccionar el DR
             pag = DoctoRelacionado_Pagos.objects.filter(Pago_rel=pagoid, IdDocumento=id_ingreso).count()
-            print('Existe pago',pag)
+            
             if pag>0:
                 return JsonResponse({'res':f'El docuemento relacionado ya esta dado de alta en este pago'}, safe=False, status=200)
             try:                
                 #cuenta los pagos en los que el DR esta dado de alta que no sea el mismo pago 
                 pag = DoctoRelacionado_Pagos.objects.filter(IdDocumento=id_ingreso).count()
+                
                 ing = Ingreso.objects.get(UUID=id_ingreso)
                 
                 if pag == 0:
@@ -199,12 +244,13 @@ class Pagos_ChecarSaldo_ViewAPI(View):
                     res['ImpSaldoInsoluto'] = ing.Total
                 else:
                     res = DoctoRelacionado_Pagos.objects.values('ImpSaldoAnt', 'ImpPagado', 'ImpSaldoInsoluto').filter(IdDocumento=id_ingreso).aggregate(
-                        ImpSaldoAnt   = ing.Total - Sum('ImpSaldoAnt'),
-                        ImpPagado     = ing.Total- Sum('ImpPagado'),
-                        ImpSaldoInsoluto = ing.Total - Sum('ImpSaldoInsoluto')
+                        ImpSaldoAnt   = Sum('ImpSaldoInsoluto'),
+                        ImpPagado     = Sum('ImpPagado'),
+                        ImpSaldoInsoluto = Sum('ImpSaldoInsoluto')
                     )
                     res['NumParcialidad']= pag + 1
-                    print('p: ',res)
+                res['pago'] = c[0]
+                    
             except:
                 return JsonResponse({'res':f'error al intentar leer pago y/o ingreso'}, safe=False, status=200)
         return JsonResponse({'res':res}, safe=False, status=200)

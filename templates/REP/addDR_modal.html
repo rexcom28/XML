@@ -1,0 +1,38 @@
+<!--Add Modal DR-->
+<div class="modal fade" id="addDRModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Agrega documento Relacionado</h5>
+                <button @click="dismissAddDR()" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" :id="CFDI_Rel_id">
+                <div class="col">
+                    <strong>UUID</strong>
+                    <input name="addUUID" class="form-control"  type="text"  v-model="UUID" maxlength="36" >
+                    <button id="btnload" @click="loadDR()" data-bs-toggle="modal" data-bs-target="#drModal" class="btn btn-outline-secondary" type="button">Lista DR</button>
+                </div>
+                <div class="col">
+                    <strong>Tipo Relacion</strong>
+                    <div class="input-group mb-3">
+                        <select 
+                        id="caTipoRel" class="form-select" 
+                        v-model="TipoRel">
+                            <option v-for="c_TipoRel in c_TipoRelS" 
+                                    v-bind:value="c_TipoRel.Relacion"                                    
+                            >
+                                [[ c_TipoRel.Relacion ]]-[[ c_TipoRel.Descripcion ]]
+                            </option>
+                        </select>
+                    </div>
+                </div>
+                
+            </div>
+            <div class="modal-footer">
+                <button @click="dismissAddDR()" type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancel</button>
+                <button @click="addDR(CFDI_Rel_id, $event)" type="submit" data-bs-dismiss="modal" class="btn btn-success">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!--END Add Modal DR-->
