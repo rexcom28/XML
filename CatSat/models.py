@@ -1,14 +1,22 @@
-from django.db import models
 
+from django.db import models
+from django.utils.encoding import smart_str
+
+
+def customEncode(string):
+
+    return smart_str(string, encoding='utf')
 
 class c_FormaPago(models.Model):
     FormaPago   = models.CharField(max_length=2, null=False,blank=False)
     Descripcion = models.CharField(max_length=50, null=False,blank=False)
     def __str__(self):
         return self.FormaPago+'-'+self.Descripcion
+
 class c_Moneda(models.Model):
     Moneda  = models.CharField(max_length=3, null=False,blank=False)
     Descripcion = models.CharField(max_length=100, null=False,blank=False)
+
     def __str__(self):
         return self.Moneda+'-'+self.Descripcion
 class c_CodigoPostal(models.Model):
@@ -25,6 +33,7 @@ class c_RegimenFiscal(models.Model):
     Moral   = models.BooleanField(null=True,blank=True)
     def __str__(self):
         return self.Regimen+'-'+self.Descripcion
+
 class c_Pais(models.Model):
     Pais    = models.CharField(max_length=3, null=False,blank=False)
     Descripcion = models.CharField(max_length=65, null=False,blank=False)

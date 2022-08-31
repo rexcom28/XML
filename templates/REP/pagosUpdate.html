@@ -114,10 +114,17 @@
                         
                         <td>{{dr.ImpSaldoInsoluto}}</td>
                         <td>{{dr.ImpSaldoAnt}}</td> 
-                        <td><a @click="dr({{dr.id}})" href="#{{dr.id}}" data-bs-toggle="modal" data-bs-target="#drUpdateModal{{dr.id}}" class="btn btn-outline-primary">Update</a></td>
+                        <td>
+                            <!--a  @click="dr({{dr.id}}, '{{dr.IdDocumento}}'); Saldo('{{formDR.Pago_rel.value}}', '{{dr.IdDocumento}}');" href="#{{dr.id}}" data-bs-toggle="modal" data-bs-target="#drUpdateModal{{dr.id}}" class="btn btn-outline-primary">Update</a-->
+                            <a href="{% url 'PagoDR_update' dr.id %}" class="btn btn-outline-primary" > Editar</a>
+                            
+                        </td>
                         <td><a  data-bs-toggle="modal" data-bs-target="#deleteModal{{dr.id}}" class="btn btn-outline-danger p-2">Borrar</a></td>
                         <td>
-                            {% include "REP/pagoDR_updateModal.html" %}
+                            {% comment %}
+                            {% include "REP/pagoDR_updateModal.html" %}  
+                            {% endcomment %}
+                            
                             {% include "REP/doctoRelacionado_DeleteModal.html" %}
                         </td>
 
@@ -140,13 +147,165 @@
         delimiters:['[[',']]'],
         data(){
             return{
-                idDelete: ''
+                idDelete: '',
+                pago:{},
+                Ingreso:{},
+                IngresoS:[],
+                SelectedRow:[],
+                id:'',
+                dr_UUID:'',
+                saldo:[],
             }
         },
         mounted(){
 
         },
         methods: {
+            async Saldo(a, b){
+                console.log(a,b)
+                let response = await sendRequest(`/compPagos/checarSaldoPago/?id=${b}&pago=${a}&mod=true`, 'get')
+                let resolve =  Promise.resolve(response)
+                    resolve.then(res=> {
+                        return res.json()
+                })
+                .then(data=>{
+                    this.saldo = data['res']
+                })
+            },
+            hasRemo(){
+                    
+                const one = document.querySelector('.table')
+                const rows = one.querySelectorAll("tr.item-row")
+                rows.forEach((el)=>{
+                    this.IngresoS=''
+                    this.SelectedRow = []                        
+                    el.removeAttribute("style")
+                })
+            },
+            async selectrow(){
+                
+                
+                if (this.SelectedRow.length == 0){
+                    return alert('No seleccionado')
+                }
+                const pago = '{{formDR.Pago_rel.value}}'
+                console.log('this.SelectedRow',this.SelectedRow)
+                id_Folio.value      = this.SelectedRow.Folio
+                id_Serie.value      = this.SelectedRow.Serie
+                id_MonedaDR.value   = this.SelectedRow.Moneda
+                id_IdDocumento.value= this.SelectedRow.UUID
+                
+                let response = await sendRequest(`/compPagos/checarSaldoPago/?id=${this.SelectedRow.UUID}&pago=${pago}`, 'get')
+                let resolve =  Promise.resolve(response)
+                resolve.then(res=> {
+                    return res.json()
+                })
+                .then(data=>{
+                    this.saldo = data['res']
+                    console.log(data['res'])
+                    if(data['res']==='El docuemento relacionado ya esta dado de alta en este pago'){
+                        id_Folio.value      = ''
+                        id_Serie.value      = ''
+                        id_MonedaDR.value   = ''
+                        id_IdDocumento.value= ''
+                        return alert(data['res'])
+                    }else{
+                        id_NumParcialidad.value = data['res'].NumParcialidad
+                        if(Object.entries(this.saldo).length > 1){
+                            id_ImpSaldoAnt.value = parseFloat(data['res'].ImpSaldoAnt).toFixed(6)
+                            id_ImpSaldoInsoluto.value =  parseFloat(data['res'].ImpSaldoInsoluto).toFixed(6)
+                            return this.pago = data['res'].pago
+                        }
+                    }
+                    
+                })
+                .catch((error)=>{
+                    console.error('error',error['res'])
+                    
+                })
+                closeList.click()
+                
+                
+
+            },
+            cl(e, IN){
+                //console.log(IN, e)
+                const r = document.getElementById(IN.UUID)
+                const at = r.hasAttribute("style")
+                const one = document.querySelector('.table')
+                const rows = one.querySelectorAll("tr.item-row")
+                this.SelectedRow = []
+                rows.forEach((el)=>{
+                    //console.log(r.id== el.id)
+                    
+                    if(r.id == el.id && !at){
+                        el.setAttribute("style", "background-color: gray;")
+                        this.SelectedRow = IN
+                        console.log('this.SelectedRow ',this.SelectedRow)
+                        return this.SelectedRow
+                    }else{
+                        el.removeAttribute("style")
+                        
+                    }
+                    
+                })                                        
+            },
+            async loadDR(){
+                let id = '{{formDR.Pago_rel.value}}'    
+                console.log('id',id)      
+                if (id !='None'){
+                    let response = await sendRequest(`/compPagos/seekdrPago/?id=${id}`, 'get')
+                    let resolve = Promise.resolve(response)
+                    resolve.then(res=>{
+                        return res.json()
+                    })
+                    .then((data)=>{
+                        console.log('ayayaya',data)
+                        this.IngresoS=data["res"]
+                    })
+                }          
+                
+            },
+            checkPago(e){
+
+            },
+            async calculaPago(e,dr_id, IdDocumento){
+                
+                console.log(this.pago, '{{formDR.Pago_rel.value}}' , dr_id, pago_rel)
+                
+                let pago_rel = '{{formDR.Pago_rel.value}}'
+                
+                let response = await sendRequest(`/compPagos/checarSaldoPago/?id=${IdDocumento}&pago=${pago_rel}&mod=true`, 'get')
+                let resolve =  Promise.resolve(response)
+                resolve.then(res=> {
+                    return res.json()
+                })
+                .then(data=>{
+                    console.log('saldo ',data)
+                    let id_ImpSaldoAnt = document.getElementById('id_ImpSaldoAnt')
+                    let id_NumParcialidad = document.getElementById('id_NumParcialidad')
+                    let id_ImpSaldoInsoluto =document.getElementById('id_ImpSaldoInsoluto')                    
+                    
+                })
+                .catch((error)=>{
+                    console.error('error',error['res'])
+                    
+                })
+                console.log('this.pago ',this.pago)
+                id_ImpSaldoInsoluto.value = id_ImpSaldoAnt.value - id_ImpPagado.value
+                id_ImpSaldoInsoluto.value = parseFloat(id_ImpSaldoInsoluto.value).toFixed(6)
+                if (this.pago.MonedaP==="MXN" && id_MonedaDR.value==="USD")
+                {
+                    equi = (this.pago.Monto / this.pago.TipoCambioP) / this.pago.Monto
+                    id_EquivalenciaDR.value = parseFloat(equi).toFixed(6)
+                }else if (this.pago.MonedaP==="USD" && id_MonedaDR.value==="MXN")
+                {
+                    id_EquivalenciaDR.value = parseFloat(this.pago.TipoCambioP).toFixed(6)
+                }else{
+                    id_EquivalenciaDR.value = parseFloat(1).toFixed(6)
+                }
+                
+            },
             ale(){
                 alert("Guarde el Pago antes de agregar  DR")
             },
@@ -176,8 +335,10 @@
                 }       
                 document.getElementById('alert').removeAttribute("style")                
             },
-            async dr(dr_id){
-                console.log('dr method')
+            async dr(dr_id, UUID){
+                console.log('dr method', dr_id, UUID)
+                this.id = dr_id
+                this.dr_UUID = UUID
                 let response = await sendRequest(`/compPagos/updatePago/${dr_id}`, 'get')
                 let resolve =  Promise.resolve(response)
                 resolve.then(res=> {

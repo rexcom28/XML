@@ -1,3 +1,4 @@
+from ast import arg
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import JsonResponse
 from django.shortcuts import render
@@ -36,6 +37,10 @@ class ConfiguracionEmpresaView(LoginRequiredMixin, UpdateView):
     template_name = "Clientes/ConfigEmpresa_form.html"
     form_class = ConfigEmpresaForm
     success_url  =  reverse_lazy('ingreso-list-view')
+    def get(self, request, *args,**kwargs):
+        obj, created = Configuracion.objects.get_or_create(pk=self.kwargs['pk'])
+        print ('obj ', obj, '   ', 'crea', created)
+        return super().get(self, request, *args, **kwargs)
 
 #Cliente---------------
 class ClientesListView(LoginRequiredMixin, ListView):

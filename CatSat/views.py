@@ -8,12 +8,12 @@ from django.http import JsonResponse
 from . models import *
 from django.middleware.csrf import  get_token
 from django.contrib.auth.decorators import login_required
-from Comp.views import ConceptoUpdateView
+
 
 def generate_csrf(request):
 	return JsonResponse({'csrf_token': get_token(request)}, status=200)
 
-class c_ClaveProdServView(ConceptoUpdateView, View):
+class c_ClaveProdServView(View):
     def get(self, request,**kwargs):        
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             fil = request.GET.get('prod', '')

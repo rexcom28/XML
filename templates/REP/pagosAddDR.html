@@ -7,7 +7,7 @@
 {% block content %}
 <br>
 <div id="app" v-cloak>
-    <form method="post">
+    <form @submit="checkPago($event)" method="post">
         {% csrf_token %}
         <div class="card border-dark mb-3">
             <div class="card-header">
@@ -124,27 +124,58 @@
                    IngresoS:[],
                    SelectedRow:[],
                    saldo:[],
-                   Pago:{},
+                   pago:{},
                 }
             },
             mounted() {
                 //this.loadDR()
             },
             methods: {
+                checkPago(e){
+                    
+                    if (parseFloat(id_ImpPagado.value) <=0  ){
+                        e.preventDefault();
+                        
+                        id_ImpPagado.value = null;
+                        this.calculaPago(e)
+                        id_ImpSaldoInsoluto.focus()
+                        return alert('El importe pagado no puede se 0')
+                    }
+                    if (parseFloat(id_ImpSaldoAnt.value) <=0  ){
+                        e.preventDefault();
+                        return alert('El documento relacionado ya se encuentra con saldo pendiente de cero.')
+                    }
+                },
                 calculaPago(e){
                     
-                    id_ImpSaldoInsoluto.value = id_ImpSaldoAnt.value - id_ImpPagado.value
+
+                    
+                    
+                    if(parseFloat(id_ImpPagado.value) > parseFloat(id_ImpSaldoInsoluto.value) ){
+                        id_ImpPagado.value = 0
+                        return alert('El importe pagado, es mayor al importe saldo insoluto')
+                    }
+                    
+                    
                     if (this.pago.MonedaP==="MXN" && id_MonedaDR.value==="USD")
                     {
                         equi = (this.pago.Monto / this.pago.TipoCambioP) / this.pago.Monto
                         id_EquivalenciaDR.value = parseFloat(equi).toFixed(6)
-                    }else if (this.pago.MonedaP==="USD" && id_MonedaDR.value==="MXN")
+
+                        if ((id_ImpPagado.value / id_EquivalenciaDR.value) > this.pago.Monto ){
+                            id_ImpPagado.value = null
+                            return alert(`El importe pagado($${id_ImpPagado.value}, convertido a la moneda del pago) \nes mayor al monto total del pago $${this.pago.Monto}`)
+                        }
+                    }
+                    
+                    if (this.pago.MonedaP==="USD" && id_MonedaDR.value==="MXN")
                     {
                         id_EquivalenciaDR.value = parseFloat(this.pago.TipoCambioP).toFixed(6)
                     }else{
                         id_EquivalenciaDR.value = parseFloat(1).toFixed(6)
                     }
-                    // 
+                    id_ImpSaldoInsoluto.value = id_ImpSaldoAnt.value - id_ImpPagado.value
+                    id_ImpSaldoInsoluto.value = parseFloat(id_ImpSaldoInsoluto.value).toFixed(6)
                 },
                 hasRemo(){
                     

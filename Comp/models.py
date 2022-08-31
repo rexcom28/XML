@@ -40,28 +40,34 @@ class Ingreso(Comprobante,Emisor,Receptor):
         return self.Ingreso
     def save(self, *args, **kwargs):
         
-        if self.Estado_CFDI !=self.TIMBRADO and self.id != None :
-            self.Estado_CFDI=self.MODIFICADO
-            
+        #if self.Estado_CFDI !=self.TIMBRADO and self.pk != None :
+        #    self.Estado_CFDI=self.MODIFICADO
+
         #run the save Perform action after database operation
-        super(Ingreso, self).save(*args, **kwargs)
+        super(Ingreso, self).save(*args, **kwargs)                
+        #so the inlines partidas are already in the DB to sumarize TAXES
+        try:
+            Ingreso._meta.get_field('id')
+            print('save() Ingreso',self.id )
+            #self.Zuma(self.id)
+            
+        except models.FieldDoesNotExist:
+            print('naaaaaaa')
+        #super(Ingreso, self).save(*args, **kwargs)
         
-        #so the inlines partidas are in the DB to sumarize TAXES
-        self.Zuma()
-        super(Ingreso, self).save(*args, **kwargs)
         
 
         
-    def Zuma(self):        
+    def Zuma(self, id):            
         # imp = Ingreso_Conceptos.objects.filter(Comprobante=self.id).aggregate(
         #     Total_Importe= Sum('Importe'),
             
         #     Tot_Descuento = Sum('Descuento')
-        # )
+        # )                
         IVA= decimal.Decimal(0.0000)
         IVA_R = decimal.Decimal(0.0000)
         ISR = decimal.Decimal(0.0000)
-        for i in Impuesto_PartidasIngreso.objects.filter(Imp_Partida__Comprobante=self.id):
+        for i in Impuesto_PartidasIngreso.objects.filter(Imp_Partida__Comprobante=id):
             if i.Impuesto == i.IVA and i.Tipo_T_R==i.TRASLADO:
                 IVA     += decimal.Decimal(i.Importe)
             if i.Impuesto == i.IVA and i.Tipo_T_R==i.RETENCION:
@@ -77,7 +83,7 @@ class Ingreso(Comprobante,Emisor,Receptor):
         except:
             self.Total = 0    
         #print(f'Importes partidas{IVA}--- {i.TRASLADO}  {i.id} {i.Impuesto},  Tipo_T_R:{i.Tipo_T_R}, Imp{i.Importe}')
-                    
+                        
         
         
 class Impuesto_Ingreso(Impuesto):
@@ -85,7 +91,7 @@ class Impuesto_Ingreso(Impuesto):
     ImpuestosIngreso    = models.ForeignKey(Ingreso, related_name='Impuestos_Ingreso', on_delete=models.CASCADE)
           
 class Ingreso_Conceptos(Concepto):
-    Comprobante      = models.ForeignKey(Ingreso, on_delete=models.CASCADE, null=False)
+    Comprobante      = models.ForeignKey(Ingreso, related_name='partidasIngreso',on_delete=models.CASCADE, null=False)
     #InfoAduanera    = models.ManyToManyField(InformacionAduanera, related_name='Concepto_InfoAduana', blank=True)
     IVA= models.BooleanField(default=False, blank=False, null=False)
     ISR= models.BooleanField(default=False, blank=False, null=False)
@@ -105,6 +111,7 @@ class Ingreso_Conceptos(Concepto):
                     Impuesto        = '002' if attribute in ['IVA_Ret','IVA'] else '001',
                     Tipo_T_R        = 'RETENCION' if attribute=='IVA_Ret' else ( 'RETENCION' if attribute=='ISR' else 'TRASLADO')
                 )
+                print('obj----------------', obj)
                 if obj:
                     obj.Base = self.Importe
                     obj.TipoFactor= 'Tasa'
@@ -133,7 +140,7 @@ class Ingreso_Conceptos(Concepto):
         return f'{self.Comprobante}- {self.id}'
 
 class Impuesto_PartidasIngreso(Impuesto):
-    Imp_Partida = models.ForeignKey(Ingreso_Conceptos, on_delete=models.CASCADE)
+    Imp_Partida = models.ForeignKey(Ingreso_Conceptos, related_name='Imp_Partida', on_delete=models.CASCADE)
     def __str__(self):
         return f'Comp: {self.Imp_Partida.Comprobante}, -Impuesto({self.Impuesto}),   ${self.Importe}'
 
@@ -144,7 +151,7 @@ class CuentaPredial(models.Model):
 
 class Parte(ConceptoBase):
     Ingreso_Concepto     = models.ForeignKey(Ingreso_Conceptos, related_name='IngresoConcepto_Parte', on_delete=models.CASCADE, blank=True, null=True)
-    InfoAduanera    = models.ManyToManyField(InformacionAduanera, related_name='Parte_InfoAduana', blank=True)
+    #InfoAduanera    = models.ManyToManyField(InformacionAduanera, related_name='Parte_InfoAduana', blank=True)
     def __str__(self):
         return str(self.Descripcion)
     

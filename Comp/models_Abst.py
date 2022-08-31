@@ -1,7 +1,3 @@
-from pickle import TRUE
-from pydoc import visiblename
-
-
 from . models import *
 from django.db import models
 from CatSat.models import c_FormaPago, c_TipoRelacion, c_UsoCFDI, c_RegimenFiscal, c_Pais
@@ -9,10 +5,13 @@ from CatSat.models import c_FormaPago, c_TipoRelacion, c_UsoCFDI, c_RegimenFisca
 class Comprobante(models.Model):
     def c_Uso():
         return [(Uso.Uso, f'{Uso.Uso}-{Uso.Descripcion}') for Uso in c_UsoCFDI.objects.all()]
+        
     def c_Regimen():
         return [(Reg.Regimen,f'{Reg.Regimen}-{Reg.Descripcion}') for Reg in c_RegimenFiscal.objects.all()]
+        
     def c_Pais():
         return [(Pa.Pais,f'{Pa.Pais}-{Pa.Descripcion}') for Pa in c_Pais.objects.all()]
+        
 
     NAP = '01'
     DEF = '02'
@@ -50,6 +49,7 @@ class Comprobante(models.Model):
 
     def c_FormaPagoF():
         return [(FP.FormaPago, FP.FormaPago+'-'+FP.Descripcion) for FP in c_FormaPago.objects.all()]
+        
     Version = models.CharField(max_length=5, default='4.0')
     Serie   = models.CharField(blank=True, max_length=25)
     Folio   = models.CharField(blank=True, max_length=40 )
@@ -57,6 +57,7 @@ class Comprobante(models.Model):
     TipoCambio  = models.DecimalField(max_digits=10,decimal_places=6, blank=False, null=True)
     Moneda      = models.CharField(max_length=3, blank=False, default='MXN')    
     FormaPago   = models.CharField( choices=c_FormaPagoF(),max_length=2, blank=True, null=True)
+    
     Exportacion = models.CharField(max_length=2, blank=False,null=False, choices=c_Exportacion, default=NAP)
     MetodoPago  = models.CharField(max_length=4, blank=True,null=True, choices=c_MetodoPago, default=PPD)
     LugarExpedicion = models.CharField(blank=False,null=False, max_length=5)
@@ -134,7 +135,8 @@ class Concepto(ConceptoBase):
 
 class CFDI_Relacionados_Base(models.Model):
     def c_Relacion():
-        return [(rel.Relacion,rel.Relacion+'-'+rel.Descripcion) for rel in c_TipoRelacion.objects.all()]    
+        return [(rel.Relacion,rel.Relacion+'-'+rel.Descripcion) for rel in c_TipoRelacion.objects.all()]
+        
     TipoRelacion    = models.CharField(max_length=2, choices=c_Relacion())
     UUID            = models.CharField(max_length=36, unique=True)
     class Meta:

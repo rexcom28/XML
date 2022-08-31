@@ -11,12 +11,19 @@
             
             <div class="modal-body">
 
-                <form method="post" id="form{{dr.id}}" action="{% url 'PagoDR_update' dr.id %}">                    
+                <form @submit="checkPago($event)" method="post" id="form{{dr.id}}" action="{% url 'PagoDR_update' dr.id %}">                    
                     {% csrf_token %}
                     <div class="row p-3">
                         <div class="col-12">
                             <label for="{{formDR.IdDocumento.id_for_label }}"><strong>UUID:</strong></label>
-                            {% render_field formDR.IdDocumento placeholder=formDR.IdDocumento.label class+="form-control"  type="text" %}
+                            
+                            <div class="input-group mb-3">                        
+                                
+                                {% render_field formDR.IdDocumento autocomplete="off" placeholder=formDR.IdDocumento.label class+="form-control"   type="text" %}
+                                <div class="input-group-append">                            
+                                    <button @click="loadDR()" data-bs-toggle="modal" data-bs-target="#drModal" class="btn btn-outline-secondary" type="button">Lista DR</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="col">
                             <label for="{{formDR.Serie.id_for_label }}"><strong>Serie:</strong></label>
@@ -53,7 +60,7 @@
                     <div class="row p-3">
                         <div class="col">
                             <label for="{{formDR.ImpPagado.id_for_label }}"><strong>Importe Pagado:</strong></label>
-                            {% render_field formDR.ImpPagado placeholder=formDR.ImpPagado.label class+="form-control"  type="number" %}
+                            {% render_field formDR.ImpPagado @change="calculaPago($event, id, dr_UUID)" placeholder=formDR.ImpPagado.label class+="form-control"  type="number" %}
                         </div>
                         <div class="col">
                             <label for="{{formDR.ImpSaldoAnt.id_for_label }}"><strong>Saldo Anterior:</strong></label>
@@ -77,4 +84,7 @@
         </div>
     </div>
 </div>
+<!--DR modal-->
+{% include "REP/PagoDR_List_modal.html" %}
+
 {% endif %}

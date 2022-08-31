@@ -409,29 +409,42 @@
                 const Prod = this.c_ProductoS.filter((e)=>{
                     return e['ClaveProducto']===event.target.value
                 })
-                //console.log(event.target.id.slice(-15,1))
+
+                //console.log(Prod[0].Descripcion)
                 if(Prod.length >0 && event.target.id.slice(-15) ==='0-ClaveProdServ'){                    
-                    const one = document.querySelector("#pills-tabContent-inlineid_ingreso_conceptos_set-0-id")
-                    const mat = one.querySelectorAll("div.col")    
+                    const one = document.querySelector("#pills-home-inlineid_partidasIngreso-0-id")    
+                    const tab2 = document.querySelector("#pills-contact-inlineid_partidasIngreso-0-id")                                                        
+                    const mat = one.querySelectorAll("div.col")
+                    const mat2 = tab2.querySelectorAll("div.col")
+
+                    //console.log(tab2)
+                    mat2.forEach((e)=>{                        
+                        this.fields(e.firstElementChild.id, Prod)
+                    })
+                    
                     mat.forEach((e)=>{
                         //console.log(e.firstElementChild.id)
                         this.fields(e.firstElementChild.id, Prod)
                     })
+                    
                 }else{
-                    const one = document.querySelector("#pills-tabContent-inlineid_ingreso_conceptos_set-1-id")
+                    const one = document.querySelector("#pills-home-inlineid_partidasIngreso-1-id")
                     const mat = one.querySelectorAll("div.col")
                     mat.forEach((e)=>{
                         //console.log(e.firstElementChild.id)
                         this.fields(e.firstElementChild.id, Prod)
-                    })    
+                    })
                 }
             },
             async Calc(event){
-                let ori = event.target.id.slice(25,26)                
-                let cant     = document.getElementById('id_ingreso_conceptos_set-'+ori+'-Cantidad')
-                let valUni   = document.getElementById('id_ingreso_conceptos_set-'+ori+'-ValorUnitario')            
-                let importe  = document.getElementById('id_ingreso_conceptos_set-'+ori+'-Importe')
-                let desc     = document.getElementById('id_ingreso_conceptos_set-'+event.target.id.slice(-10,-9)+'-Descuento')
+                let ori = event.target.id.slice(19,20)
+                let partidas = 'id_partidasIngreso-' 
+                         
+                let cant     = document.getElementById(partidas+ori+'-Cantidad')
+                let valUni   = document.getElementById(partidas+ori+'-ValorUnitario')            
+                let importe  = document.getElementById(partidas+ori+'-Importe')
+                let desc     = document.getElementById(partidas+ori+'-Descuento')
+                
                 let total    = cant.value * valUni.value
                 if(desc >0){
                     total -= desc.value
@@ -442,42 +455,37 @@
 
             },
             async fields(id, Prod){
-                let ori = id.slice(25,26)
-                //console.log('ori',ori)
+                //console.log(id,Prod)
+                let partidas = 'id_partidasIngreso-'
+                let ori = id.slice(19,20)
+                //console.log('ori',ori, Prod)
                 switch(id)
                 {
-                    case 'id_ingreso_conceptos_set-'+ori+'-Descripcion':                        
+                    case partidas+ori+'-Descripcion':                           
                         document.getElementById(id).value = Prod[0].Descripcion
-                        break
-                        
-                    case 'id_ingreso_conceptos_set-'+ori+'-ClaveUnidad':
-                        
+                        break                        
+                    case partidas+ori+'-ClaveUnidad':                        
                         document.getElementById(id).value = Prod[0].Unidad
                         break
-                    case 'id_ingreso_conceptos_set-'+ori+'-Descuento':
+                    case partidas+ori+'-Descuento':
                         document.getElementById(id).value = 0
                         break
-                    case 'id_ingreso_conceptos_set-'+ori+'-ValorUnitario':
+                    case partidas+ori+'-ValorUnitario':
                         document.getElementById(id).value = Prod[0].ValorUnitario
                         break
-                    case 'id_ingreso_conceptos_set-'+ori+'-Unidad':
+                    case partidas+ori+'-Unidad':
                         document.getElementById(id).value = Prod[0].Unidad
                         break
-                    case 'id_ingreso_conceptos_set-'+ori+'-IVA':
+                    case partidas+ori+'-IVA':
                         document.getElementById(id).checked = Prod[0].IVA
                         break
-                    case 'id_ingreso_conceptos_set-'+ori+'-IVA_Ret':
+                    case partidas+ori+'-IVA_Ret':
                         document.getElementById(id).checked = Prod[0].IVA_Ret 
                         break
-                    case 'id_ingreso_conceptos_set-'+ori+'-ISR':
+                    case partidas+ori+'-ISR':
                         document.getElementById(id).checked = Prod[0].ISR
                         break
                 }
-                
-                
-                
-                
-                
             },
             async get_c_ProdServ(event, bool){
                 let ch_Desc

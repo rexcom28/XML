@@ -1,6 +1,3 @@
-import imp
-from pyexpat import model
-from statistics import mode
 from django.db import models
 from CatSat.models import c_Pais,c_RegimenFiscal
 
@@ -8,15 +5,17 @@ from CatSat.models import c_Pais,c_RegimenFiscal
 class Cliente(models.Model):
     def c_paisC():
         return [(res.Pais, res.Pais+' - '+res.Descripcion) for res in c_Pais.objects.all()]
+        
     def c_RegimenC():
         return [(reg.Regimen, reg.Regimen+' - '+reg.Descripcion) for reg in c_RegimenFiscal.objects.all()]
+        
     
     clave   = models.CharField(max_length=8, unique=True)
     RFC     = models.CharField(max_length=13, unique=True)
     Nombre  = models.CharField(max_length=255)
     Regimen = models.CharField(max_length=3, choices=c_RegimenC())
     Domicilio   = models.CharField(max_length=5)
-    Recidencia  =models.CharField(max_length=3, choices=c_paisC(), default='MEX')
+    Residencia  =models.CharField(max_length=3, choices=c_paisC(), default='MEX')
     Tax_id      = models.CharField(max_length=12, blank=True)
     Uso_CFDI    = models.CharField(max_length=3)
 
@@ -27,8 +26,10 @@ class Cliente(models.Model):
 class Configuracion(models.Model):
     def c_paisC():
         return [(res.Pais, res.Pais+' - '+res.Descripcion) for res in c_Pais.objects.all()]
+        
     def c_RegimenC():
         return [(reg.Regimen, reg.Regimen+' - '+reg.Descripcion) for reg in c_RegimenFiscal.objects.all()]
+        
 
     clave   = models.CharField(max_length=8, unique=True)
     RFC     = models.CharField(max_length=13, unique=True)

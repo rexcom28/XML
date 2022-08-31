@@ -175,7 +175,8 @@ class PagosDR_ViewAPI(View):
             if mod:
                 res = list(ComprobantePagos.objects.values().exclude(id=id_pago))                
             else:
-                pago = Pagos.objects.get(id=id_pago)                
+                pago = Pagos.objects.get(id=id_pago)   
+
                 res = list(Ingreso.objects.values().filter(Rfc_Rec=pago.CompPago.Rfc_Rec))
         return JsonResponse({'res':res}, safe=False, status=200)
 
@@ -221,15 +222,16 @@ class Pagos_ChecarSaldo_ViewAPI(View):
         if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
             id_ingreso = request.GET.get('id', '')
             pagoid = request.GET.get('pago', '')
-            
+            mod = True if request.GET.get('mod', '') == 'true' else False
+            print(id_ingreso, pagoid, mod)
             c = list(Pagos.objects.filter(pk=pagoid).values('MonedaP', 'Monto', 'TipoCambioP'))
-            print('Pago', c[0])
+            #print('Pago', c)
             #ExistPago = DoctoRelacionado_Pagos.objects.filter(Pago_rel=pagoid, IdDocumento=id_ingreso)
 
             #verifica que el DR no este en el pago que esta por darse de alta al seleccionar el DR
             pag = DoctoRelacionado_Pagos.objects.filter(Pago_rel=pagoid, IdDocumento=id_ingreso).count()
             
-            if pag>0:
+            if pag>0 and mod==False:
                 return JsonResponse({'res':f'El docuemento relacionado ya esta dado de alta en este pago'}, safe=False, status=200)
             try:                
                 #cuenta los pagos en los que el DR esta dado de alta que no sea el mismo pago 

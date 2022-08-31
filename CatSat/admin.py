@@ -1,11 +1,8 @@
 
-from dataclasses import field
-from pyexpat import model
 from django.contrib import admin
-
 from . models import *
 from import_export import resources
-from import_export.admin import ImportMixin
+from import_export.admin import ImportMixin, ImportExportModelAdmin
 
 class c_FormaPago_CSV(resources.ModelResource):
     class Meta:
@@ -16,6 +13,7 @@ class c_FormaPago_CSV(resources.ModelResource):
 class c_FormaPagoAdmin(ImportMixin, admin.ModelAdmin):
     list_display = ['id','FormaPago', 'Descripcion']
     resource_class = c_FormaPago_CSV
+
 #------------
 
 class c_Moneda_CSV(resources.ModelResource):
@@ -42,16 +40,26 @@ class c_CodigoPostalAdmin(ImportMixin, admin.ModelAdmin):
 #--------------------------------------------
 
 class c_RegimenFiscal_CSV(resources.ModelResource):
-    class Meta:
+     
+    class Meta:      
         model = c_RegimenFiscal
         fields = ['id', 'Regimen', 'Descripcion','Fisica','Moral']
+    def before_import_row(self, row, row_number=None, **kwargs):
+        pass
+        # print(self.Meta.model.Descripcion)
+        #print(row["Descripcion"])
+
 
 @admin.register(c_RegimenFiscal)
 class c_RegimenFiscalAdmin(ImportMixin, admin.ModelAdmin):
+    resource_class  = c_RegimenFiscal_CSV
     class Meta:
         list_display = ['id', 'Regimen', 'Descripcion','Fisica','Moral']
-        resources_class = c_RegimenFiscal_CSV
+        
+
+
 #------------------------------------------------
+
 
 class c_Pais_CSV(resources.ModelResource):
     class Meta:
