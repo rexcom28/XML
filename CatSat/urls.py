@@ -9,7 +9,8 @@ from . views import (
 )
 from . api_views import (
     c_FormaPago_APIListView,
-    c_Moneda_APIListView
+    c_Moneda_APIListView,
+    c_CodigoPostal_APIListView
 )
 
 urlpatterns = [
@@ -25,7 +26,8 @@ urlpatterns = [
     path('FormaPago/<FormaPago>/', c_FormaPago_APIListView.as_view() ),
     path('Moneda/', c_Moneda_APIListView.as_view() ),
     path('Moneda/<Moneda>/', c_Moneda_APIListView.as_view() ),
-    
+    path('CodigoPostal/', c_CodigoPostal_APIListView.as_view() ),
+    path('CodigoPostal/<CodigoPostal>/', c_CodigoPostal_APIListView.as_view() ),
 
 
 ]
