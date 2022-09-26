@@ -26,7 +26,7 @@ class IngresoDetail_ApiView(APIView):
             return Response(serializer.data)
         comp = self.get_object(pk)
         serializer = Ingreso_Serializer(comp)
-        #p = cXML(serializer.data,"ingreso")
+        p = cXML(serializer.data,"ingreso")
         
         return Response(serializer.data)
     def post(self, request, format=None):
@@ -38,9 +38,12 @@ class IngresoDetail_ApiView(APIView):
     
     def put(self, request, pk, format=None):
         ingreso = self.get_object(pk)        
-        
+        print('PUT')
         serializer = Ingreso_Serializer(ingreso, data=request.data)
+    
         if serializer.is_valid():
+            #partidas = serializer.validated_data['partidasIngreso']
+            
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

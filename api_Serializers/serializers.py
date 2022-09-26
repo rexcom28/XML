@@ -1,7 +1,7 @@
 
-from gc import collect
+
+
 from rest_framework import serializers
-from collections import OrderedDict
 from Comp.models import * 
 from REP.models import * 
 
@@ -12,18 +12,18 @@ class Impuesto_PartidasIngreso_Serializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class IngresoPartidas_Serializer(serializers.ModelSerializer):
+    id = serializers.IntegerField()
     Ingreso_id  = serializers.PrimaryKeyRelatedField(queryset=Ingreso.objects.all(), source='Comprobante.id')
     Imp_Partida   = Impuesto_PartidasIngreso_Serializer(many=True, read_only=True)
     class Meta:
         model  = Ingreso_Conceptos        
-        fields =['id','Ingreso_id','ClaveProdServ'
+        fields =('id','Ingreso_id','ClaveProdServ'
         , 'Descuento', 'ObjetoImp', 'Cantidad', 'ClaveUnidad'
         , 'Unidad', 'Descripcion', 'ValorUnitario', 'Importe'
         , 'IVA', 'IVA_Ret', 'ISR'
-
-        ,'Imp_Partida',]
+        ,'Imp_Partida',
+        )
     
-
 class IngresoDocumentoRelacionados_Serializer(serializers.ModelSerializer):
     CFDI_Rel = serializers.PrimaryKeyRelatedField(queryset=Ingreso.objects.all(), source='CFDI_Rel.id')
     class Meta:
@@ -67,38 +67,15 @@ class Ingreso_Serializer(serializers.ModelSerializer):
 
             Ingreso_Conceptos.objects.create(Comprobante=ingreso, **partida_data)
         return ingreso
-    
-    def update(self, instance, validated_data):
-        partidas= self.data['partidasIngreso']
-        
-        
-        print(type(partidas))
-        for coll in partidas:
-            collect = [ (key, val) for key, val in coll.items()]
-            
-            del collect[-1]
-            print(collect)
-            #('id', 1), ('Ingreso_id', 61), ('ClaveProdServ', '10101500'), 
-            #('Descuento', '0.000000'), ('ObjetoImp', '02'), ('Cantidad', '12.000000'), 
-            #('ClaveUnidad', 'E48'), ('Unidad', 'E48'), 
-            #('Descripcion', 'Animales vivos de granja'), ('ValorUnitario', '2.000000'),
-            #('Importe', '24.000000'), ('IVA', True), ('IVA_Ret', True), ('ISR', True)
-
-            obj, created = Ingreso_Conceptos.objects.update_or_create(
-                id=collect[0][1], 
-                #Ingreso_id=collect[1][1],
-                ClaveProdServ=collect[2][1],
-                Descuento = collect[3][1],
-                ObjetoImp = collect[4][1],
-                Cantidad = collect[5][1],
-                ClaveUnidad = collect[6][1],
-                Unidad  = collect[7][1]
-
-            )   
-            print(obj, created)
-
+    def update(self, instance, validated_data):        
+        #print(self.data) #prints the data Json
+        partidas = validated_data.pop('partidasIngreso')
+        for coll in partidas:            
+            coll = dict(coll)
+            coll.pop('Comprobante')
+            obj,created = Ingreso_Conceptos.objects.update_or_create(id=coll['id'], defaults=coll)
+            print(obj,created,coll)                  
         return instance
-
 #Serializers REP Init------------------------------->
 class Pagos_Impuestos_DRs_Serializer(serializers.ModelSerializer):
     docto_rel= serializers.PrimaryKeyRelatedField(queryset=DoctoRelacionado_Pagos.objects.all(), source='docto_rel.id')

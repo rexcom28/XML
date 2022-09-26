@@ -132,7 +132,7 @@ class Ingreso_Conceptos(Concepto):
                     pass
 
     def save(self, *args, **kwargs):        
-        self.Importe = (self.ValorUnitario * self.Cantidad ) - self.Descuento        
+        self.Importe = ( decimal.Decimal(self.ValorUnitario) * decimal.Decimal(self.Cantidad) ) - decimal.Decimal(self.Descuento)
         super(Ingreso_Conceptos, self).save(*args, **kwargs)
         self.Loop_ins_atts()
 

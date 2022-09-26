@@ -1,0 +1,251 @@
+Pais,Descripcion
+AFG,Afganistan
+ALA,Islas Aland
+ALB,Albania
+DEU,Alemania
+AND,Andorra
+AGO,Angola
+AIA,Anguila
+ATA,Antartida
+ATG,Antigua y Barbuda
+SAU,Arabia Saudita
+DZA,Argelia
+ARG,Argentina
+ARM,Armenia
+ABW,Aruba
+AUS,Australia
+AUT,Austria
+AZE,Azerbaiyan
+BHS,Bahamas (las)
+BGD,Banglades
+BRB,Barbados
+BHR,Barein
+BEL,Belgica
+BLZ,Belice
+BEN,Benin
+BMU,Bermudas
+BLR,Bielorrusia
+MMR,Myanmar
+BOL,"Bolivia, Estado Plurinacional de"
+BIH,Bosnia y Herzegovina
+BWA,Botsuana
+BRA,Brasil
+BRN,Brunei Darussalam
+BGR,Bulgaria
+BFA,Burkina Faso
+BDI,Burundi
+BTN,Butan
+CPV,Cabo Verde
+KHM,Camboya
+CMR,Camerun
+CAN,Canada
+QAT,Catar
+BES,"Bonaire, San Eustaquio y Saba"
+TCD,Chad
+CHL,Chile
+CHN,China
+CYP,Chipre
+COL,Colombia
+COM,Comoras
+PRK,Corea (la Republica Democratica Popular de)
+KOR,Corea (la Republica de)
+CIV,Cote d'Ivoire
+CRI,Costa Rica
+HRV,Croacia
+CUB,Cuba
+CUW,Curacao
+DNK,Dinamarca
+DMA,Dominica
+ECU,Ecuador
+EGY,Egipto
+SLV,El Salvador
+ARE,Emiratos Arabes Unidos (Los)
+ERI,Eritrea
+SVK,Eslovaquia
+SVN,Eslovenia
+ESP,Espana
+USA,Estados Unidos (los)
+EST,Estonia
+ETH,Etiopia
+PHL,Filipinas (las)
+FIN,Finlandia
+FJI,Fiyi
+FRA,Francia
+GAB,Gabon
+GMB,Gambia (La)
+GEO,Georgia
+GHA,Ghana
+GIB,Gibraltar
+GRD,Granada
+GRC,Grecia
+GRL,Groenlandia
+GLP,Guadalupe
+GUM,Guam
+GTM,Guatemala
+GUF,Guayana Francesa
+GGY,Guernsey
+GIN,Guinea
+GNB,Guinea-Bisau
+GNQ,Guinea Ecuatorial
+GUY,Guyana
+HTI,Haiti
+HND,Honduras
+HKG,Hong Kong
+HUN,Hungria
+IND,India
+IDN,Indonesia
+IRQ,Irak
+IRN,Iran (la Republica Islamica de)
+IRL,Irlanda
+BVT,Isla Bouvet
+IMN,Isla de Man
+CXR,Isla de Navidad
+NFK,Isla Norfolk
+ISL,Islandia
+CYM,Islas Caiman (las)
+CCK,Islas Cocos (Keeling)
+COK,Islas Cook (las)
+FRO,Islas Feroe (las)
+SGS,Georgia del sur y las islas sandwich del sur
+HMD,Isla Heard e Islas McDonald
+FLK,Islas Malvinas [Falkland] (las)
+MNP,Islas Marianas del Norte (las)
+MHL,Islas Marshall (las)
+PCN,Pitcairn
+SLB,Islas Salomon (las)
+TCA,Islas Turcas y Caicos (las)
+UMI,Islas de Ultramar Menores de Estados Unidos (las)
+VGB,Islas Virgenes (Britanicas)
+VIR,Islas Virgenes (EE.UU.)
+ISR,Israel
+ITA,Italia
+JAM,Jamaica
+JPN,Japon
+JEY,Jersey
+JOR,Jordania
+KAZ,Kazajistan
+KEN,Kenia
+KGZ,Kirguistan
+KIR,Kiribati
+KWT,Kuwait
+LAO,"Lao, (la) Republica Democratica Popular"
+LSO,Lesoto
+LVA,Letonia
+LBN,Libano
+LBR,Liberia
+LBY,Libia
+LIE,Liechtenstein
+LTU,Lituania
+LUX,Luxemburgo
+MAC,Macao
+MDG,Madagascar
+MYS,Malasia
+MWI,Malaui
+MDV,Maldivas
+MLI,Mali
+MLT,Malta
+MAR,Marruecos
+MTQ,Martinica
+MUS,Mauricio
+MRT,Mauritania
+MYT,Mayotte
+MEX,Mexico
+FSM,Micronesia (los Estados Federados de)
+MDA,Moldavia (la Republica de)
+MCO,Monaco
+MNG,Mongolia
+MNE,Montenegro
+MSR,Montserrat
+MOZ,Mozambique
+NAM,Namibia
+NRU,Nauru
+NPL,Nepal
+NIC,Nicaragua
+NER,Niger (el)
+NGA,Nigeria
+NIU,Niue
+NOR,Noruega
+NCL,Nueva Caledonia
+NZL,Nueva Zelanda
+OMN,Oman
+NLD,Paises Bajos (los)
+PAK,Pakistan
+PLW,Palaos
+PSE,"Palestina, Estado de"
+PAN,Panama
+PNG,Papua Nueva Guinea
+PRY,Paraguay
+PER,Peru
+PYF,Polinesia Francesa
+POL,Polonia
+PRT,Portugal
+PRI,Puerto Rico
+GBR,Reino Unido (el)
+CAF,Republica Centroafricana (la)
+CZE,Republica Checa (la)
+MKD,Macedonia (la antigua Republica Yugoslava de)
+COG,Congo
+COD,Congo (la Republica Democratica del)
+DOM,Republica Dominicana (la)
+REU,Reunion
+RWA,Ruanda
+ROU,Rumania
+RUS,"Rusia, (la) Federacion de"
+ESH,Sahara Occidental
+WSM,Samoa
+ASM,Samoa Americana
+BLM,San Bartolome
+KNA,San Cristobal y Nieves
+SMR,San Marino
+MAF,San Martin (parte francesa)
+SPM,San Pedro y Miquelon
+VCT,San Vicente y las Granadinas
+SHN,"Santa Helena, Ascension y Tristan de Acuna"
+LCA,Santa Lucia
+STP,Santo Tome y Principe
+SEN,Senegal
+SRB,Serbia
+SYC,Seychelles
+SLE,Sierra leona
+SGP,Singapur
+SXM,Sint Maarten (parte holandesa)
+SYR,"Siria, (la) Republica Arabe"
+SOM,Somalia
+LKA,Sri Lanka
+SWZ,Suazilandia
+ZAF,Sudafrica
+SDN,Sudan (el)
+SSD,Sudan del Sur
+SWE,Suecia
+CHE,Suiza
+SUR,Surinam
+SJM,Svalbard y Jan Mayen
+THA,Tailandia
+TWN,Taiwan (Provincia de China)
+TZA,"Tanzania, Republica Unida de"
+TJK,Tayikistan
+IOT,Territorio Britanico del Oceano Indico (el)
+ATF,Territorios Australes Franceses (los)
+TLS,Timor-Leste
+TGO,Togo
+TKL,Tokelau
+TON,Tonga
+TTO,Trinidad y Tobago
+TUN,Tunez
+TKM,Turkmenistan
+TUR,Turquia
+TUV,Tuvalu
+UKR,Ucrania
+UGA,Uganda
+URY,Uruguay
+UZB,Uzbekistan
+VUT,Vanuatu
+VAT,Santa Sede[Estado de la Ciudad del Vaticano] (la)
+VEN,"Venezuela, Republica Bolivariana de"
+VNM,Viet Nam
+WLF,Wallis y Futuna
+YEM,Yemen
+DJI,Yibuti
+ZMB,Zambia
+ZWE,Zimbabue
+ZZZ,Paises no declarados
