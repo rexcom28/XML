@@ -48,3 +48,51 @@ class c_ClaveProdServ_Serializer(serializers.ModelSerializer):
         model= c_ClaveProdServ
         fields= '__all__'
         orderig = 'ProductoServ'
+
+class  c_ClaveUnidad_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = c_ClaveUnidad
+        fields= '__all__'
+        ordering = 'ClaveUnidad'
+
+class  c_Aduana_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = c_Aduana
+        fields= '__all__'
+        ordering = 'Aduana'
+
+class  c_PatenteAduanal_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = c_PatenteAduanal
+        fields= '__all__'
+        ordering = 'Patente'
+
+class  c_Colonia_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = c_Colonia
+        fields= '__all__'
+        ordering = 'Colonia'
+
+class  c_Estado_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = c_Estado
+        fields= '__all__'
+        ordering = 'Estado'
+
+class  c_Localidad_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = c_Localidad
+        fields= '__all__'
+        ordering = 'Localidad'
+
+class  c_Municipio_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = c_Municipio
+        fields= '__all__'
+        ordering = 'Municipio'
+
+class  c_TipoRelacion_Serializer(serializers.ModelSerializer):
+    class Meta:
+        model = c_TipoRelacion
+        fields= '__all__'
+        ordering = 'Relacion'    
