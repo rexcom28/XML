@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'api_Serializers',
 
     'rest_framework',
+    'rest_framework.authtoken',
     'dj_rest_auth',
     'crispy_forms',
     'widget_tweaks',
