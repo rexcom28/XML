@@ -1,4 +1,6 @@
 from django.urls import path
+
+from . import api_views
 from .views import (
     c_ClientesView, 
     c_ProductosView,
@@ -24,7 +26,11 @@ urlpatterns =[
     path('ProductoCreate/',ProductoCreateView.as_view(), name='create_items' ),
     path('ProductoList/',ProductoListView.as_view(), name='items_list' ),
     path('Producto/<pk>/update/',ProductoUpdateView.as_view(), name='items_update' ),
-    path('<pk>/delete/', ProductoDeleteView.as_view(), name='items_delete')
+    path('<pk>/delete/', ProductoDeleteView.as_view(), name='items_delete'),
 
-    
+    # api cliente login/logoue
+    path('login/', api_views.LoginView.as_view()),
+    path('logout/', api_views.LogoutView.as_view()),
+
+    path('profile/', api_views.ProfileView.as_view()),
 ]

@@ -2,12 +2,13 @@ from . models import *
 from . serializers import *
 from rest_framework import generics
 from rest_framework.pagination import PageNumberPagination
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import SessionAuthentication
 class ExamplePagination(PageNumberPagination):       
        page_size = 100
-
-
 class c_FormaPago_APIListView(generics.ListAPIView):
-
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = c_FormaPago.objects.all().order_by('FormaPago')
     serializer_class = c_FormaPago_Serializer
     def get_queryset(self, *args, **kwargs):
@@ -17,6 +18,8 @@ class c_FormaPago_APIListView(generics.ListAPIView):
             return super().get_queryset()
 
 class c_Moneda_APIListView(generics.ListAPIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     queryset = c_Moneda.objects.all().order_by('Moneda')
     serializer_class = c_Moneda_Serializer
     def get_queryset(self, *args, **kwargs):
@@ -26,6 +29,8 @@ class c_Moneda_APIListView(generics.ListAPIView):
             return super().get_queryset()
 
 class c_CodigoPostal_APIListView(generics.ListAPIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     pagination_class = ExamplePagination 
     queryset = c_CodigoPostal.objects.all().order_by('CodigoPostal')
     serializer_class = c_CodigoPostal_Serializer
@@ -36,6 +41,8 @@ class c_CodigoPostal_APIListView(generics.ListAPIView):
             return super().get_queryset()
 
 class c_RegimenFiscal_APIListView(generics.ListAPIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     pagination_class = ExamplePagination 
     queryset = c_RegimenFiscal.objects.all().order_by('Regimen')
     serializer_class = c_RegimenFiscal_Serializer
@@ -46,6 +53,8 @@ class c_RegimenFiscal_APIListView(generics.ListAPIView):
             return super().get_queryset()
 
 class c_Pais_APIListView(generics.ListAPIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     pagination_class = ExamplePagination 
     queryset = c_Pais.objects.all().order_by('Pais')
     serializer_class = c_Pais_Serializer
@@ -56,6 +65,8 @@ class c_Pais_APIListView(generics.ListAPIView):
             return super().get_queryset()
 
 class c_UsoCFDI_APIListView(generics.ListAPIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     pagination_class = ExamplePagination 
     queryset = c_UsoCFDI.objects.all().order_by('Uso')
     serializer_class = c_UsoCFDI_Serializer
@@ -66,6 +77,8 @@ class c_UsoCFDI_APIListView(generics.ListAPIView):
             return super().get_queryset()  
 
 class c_ClaveProdServ_APIListView(generics.ListAPIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     pagination_class = ExamplePagination 
     queryset = c_ClaveProdServ.objects.all().order_by('ProductoServ')
     serializer_class = c_ClaveProdServ_Serializer
@@ -76,6 +89,8 @@ class c_ClaveProdServ_APIListView(generics.ListAPIView):
             return super().get_queryset()  
 
 class c_ClaveUnidad_APIListView(generics.ListAPIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     pagination_class = ExamplePagination 
     queryset = c_ClaveUnidad.objects.all().order_by('ClaveUnidad')
     serializer_class = c_ClaveUnidad_Serializer
@@ -86,6 +101,8 @@ class c_ClaveUnidad_APIListView(generics.ListAPIView):
             return super().get_queryset() 
 
 class c_Aduana_APIListView(generics.ListAPIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     pagination_class = ExamplePagination 
     queryset = c_Aduana.objects.all().order_by('Aduana')
     serializer_class = c_Aduana_Serializer
@@ -96,6 +113,8 @@ class c_Aduana_APIListView(generics.ListAPIView):
             return super().get_queryset()
 
 class c_PatenteAduanal_APIListView(generics.ListAPIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     pagination_class = ExamplePagination 
     queryset = c_PatenteAduanal.objects.all().order_by('Patente')
     serializer_class = c_PatenteAduanal_Serializer
@@ -106,6 +125,8 @@ class c_PatenteAduanal_APIListView(generics.ListAPIView):
             return super().get_queryset()
 
 class c_Colonia_APIListView(generics.ListAPIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     pagination_class = ExamplePagination 
     queryset = c_Colonia.objects.all().order_by('Colonia')
     serializer_class = c_Colonia_Serializer
@@ -116,6 +137,8 @@ class c_Colonia_APIListView(generics.ListAPIView):
             return super().get_queryset()
 
 class c_Estado_APIListView(generics.ListAPIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     pagination_class = ExamplePagination 
     queryset = c_Estado.objects.all().order_by('Estado')
     serializer_class = c_Estado_Serializer
@@ -126,6 +149,8 @@ class c_Estado_APIListView(generics.ListAPIView):
             return super().get_queryset()
 
 class c_Localidad_APIListView(generics.ListAPIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     pagination_class = ExamplePagination 
     queryset = c_Localidad.objects.all().order_by('Localidad')
     serializer_class = c_Localidad_Serializer
@@ -135,6 +160,8 @@ class c_Localidad_APIListView(generics.ListAPIView):
         else:
             return super().get_queryset()
 class c_Municipio_APIListView(generics.ListAPIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     pagination_class = ExamplePagination 
     queryset = c_Municipio.objects.all().order_by('Municipio')
     serializer_class = c_Municipio_Serializer
@@ -145,6 +172,8 @@ class c_Municipio_APIListView(generics.ListAPIView):
             return super().get_queryset()
 
 class c_TipoRelacion_APIListView(generics.ListAPIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
     pagination_class = ExamplePagination 
     queryset = c_TipoRelacion.objects.all().order_by('Relacion')
     serializer_class = c_TipoRelacion_Serializer

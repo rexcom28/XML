@@ -109,6 +109,7 @@ class IngresoCreateView(LoginRequiredMixin, CreateView):
             return super().form_invalid(form)
 
 class IngresoUpdateView(LoginRequiredMixin, UpdateView):
+
     model = Ingreso
     template_name = 'Ingreso.html'
     form_class = IngresoForm
